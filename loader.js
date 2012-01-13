@@ -24,7 +24,3 @@ ansi.load = function (url, charset, callback) {
     req.open('GET', url, true);
     req.send(null);
 };
-
-ansi.load('/VIK.ANS', function (data) {
-    console.log(data);
-});

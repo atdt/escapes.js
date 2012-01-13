@@ -3,9 +3,21 @@
   <head>
     <meta charset=utf-8>
     <title>loader.html</title>
-    <script src=loader.js></script>
-  </head>
+    <link rel=stylesheet href=stylesheet.css type=text/css>
+    <style>
+      body { font-family: 'PerfectDOSVGA437Regular'; }
+    </style>
+
   <body>
-    <h1>hello.</h1>
-  </body>
-</html>
+
+    <!-- force the font to load -->
+    <span style="font-family: 'PerfectDOSVGA437Regular';"> </h1>
+
+    <!-- terminal -->
+    <canvas id="term" width="740" height="480">
+      Your browser does not support HTML5 Canvas.
+    </canvas>
+
+    <!-- scripts -->
+    <script src=loader.js></script>
+    <script src=acid.js></script>
