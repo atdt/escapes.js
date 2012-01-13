@@ -1,8 +1,6 @@
 /*jslint plusplus: true*/
 // init code
 "use strict";
-var fs = require('fs');
-var buffer = fs.readFileSync('ROY-500N.ANS', 'ascii');
 
 var i, max;
 
@@ -163,6 +161,8 @@ var Cursor = function () {
 };
 
 var cursor = new Cursor();
+
+buffer = "";
 
 var parsed = buffer.split(/\x1b\x5b([=;0-9]*)([ABCDHJKfhlmnpsu])/);
 var i, max, row, column, columns, rows, args;
