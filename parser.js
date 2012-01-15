@@ -11,9 +11,6 @@ var ansi = ansi || {};
             }
             return array;
         },
-        Literal = function (text) {
-            this.text = text;
-        },
         Escape = function (match) {
             this.opcode = match[2];
             this.args = parseIntArray(match[1].split(';'));
@@ -28,13 +25,13 @@ var ansi = ansi || {};
                 if (match !== null) {
                     // Everything from current index to match is literal
                     if (match.index > pos) {
-                        options.onLiteral(new Literal(buffer.slice(pos, match.index)));
+                        options.onLiteral(buffer.slice(pos, match.index));
                     }
                     options.onEscape(new Escape(match));
                 }
             } while (re.lastIndex !== 0);
             if (pos < buffer.length) {
-                options.onLiteral(new Literal(buffer.slice(pos)));
+                options.onLiteral(buffer.slice(pos));
             }
         };
     ansi.iter_tokens = iter_tokens;

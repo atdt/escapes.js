@@ -161,8 +161,7 @@ var Cursor = function () {
 };
 
 var cursor = new Cursor();
-
-buffer = "";
+var buffer = "";
 
 var parsed = buffer.split(/\x1b\x5b([=;0-9]*)([ABCDHJKfhlmnpsu])/);
 var i, max, row, column, columns, rows, args;
