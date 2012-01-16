@@ -31,33 +31,35 @@ ansi = ansi || {};
             [170, 0, 170],    // Magenta
             [0, 170, 170],    // Cyan
             [170, 170, 170]   // White
-        ];
+        ],
 
-    function Flags() {
-        this[BLINK] = false;
-        this[BRIGHT] = false;
-        this[INVISIBLE] = false;
-        this[REVERSE] = false;
-        this[UNDERLINE] = false;
-    }
+        Flags = function () {
+            this[BLINK]     = false;
+            this[BRIGHT]    = false;
+            this[INVISIBLE] = false;
+            this[REVERSE]   = false;
+            this[UNDERLINE] = false;
+        },
+
+        Color = function () {
+            this.foreground = WHITE;
+            this.background = BLACK;
+        },
+
+        Position = function () {
+            this.column = 1;
+            this.row = 1;
+        };
 
     Flags.prototype.reset = function () {
         Flags.call(this);
     };
 
-    function Color() {
-        this.foreground = WHITE;
-        this.background = BLACK;
-    }
 
     Color.prototype.reset = function () {
         Color.call(this);
     };
 
-    function Position() {
-        this.column = 1;
-        this.row = 1;
-    }
 
     Position.prototype.reset = function () {
         Position.call(this);
@@ -171,10 +173,10 @@ ansi = ansi || {};
                 this.position.load()
                 break;
             case 'm':
-                console.log(args);
                 for (i = 0, max = args.length; i < max; i++) {
                     // if (args[i] === null || args[i] === NONE) {
                         // this.flags.reset();
+                    console.log('m: %d', args[i])
                     if (args[i] === NONE) {
                         this.flags.reset();
                     } else if (args[i] >= 30 && args[i] <= 37) {
