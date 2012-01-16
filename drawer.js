@@ -41,6 +41,37 @@ ansi = ansi || {};
         this[UNDERLINE] = false;
     }
 
+    Flags.prototype.reset = function () {
+        Flags.call(this);
+    };
+
+    function Color() {
+        this.foreground = WHITE;
+        this.background = BLACK;
+    }
+
+    Color.prototype.reset = function () {
+        Color.call(this);
+    };
+
+    function Position() {
+        this.column = 1;
+        this.row = 1;
+    }
+
+    Position.prototype.reset = function () {
+        Position.call(this);
+    };
+
+    Position.prototype.save = function () {
+        this.saved = {column: this.column, row: this.row};
+    };
+
+    Position.prototype.load = function () {
+        this.column = this.save.column;
+        this.row = this.saved.row;
+    };
+
     function canvas_supported() {
         var canvas = document.createElement('canvas'),
             context = canvas.getContext && canvas.getContext('2d');
@@ -55,12 +86,12 @@ ansi = ansi || {};
         return hex;
     }
 
-    function to_int_array (array) {
-            var i = array.length;
-            while (i--) {
-                array[i] = parseInt(array[i], 10);
-            }
-            return array;
+    function to_int_array(array) {
+        var i = array.length;
+        while (i--) {
+            array[i] = parseInt(array[i], 10) || null;
+        }
+        return array;
     }
 
     ansi.draw = {
@@ -69,38 +100,26 @@ ansi = ansi || {};
         // STATE
         //
         flags: new Flags(),
-
-        position: {
-            column: 0,
-            row: 0
-        },
-        color: {
-            foreground: WHITE,
-            background: BLACK
-        },
+        position: new Position(),
+        color: new Color(),
         glyph: {
             height: 18,
             width: 10
         },
 
-        // 
+        //
         // METHODS
         //
 
-        reset: function () {
-            var flag;
-            for (flag in this.flags) {
-                if (this.flags.hasOwnProperty(flag)) {
-                    this.flags[flag] = false;
-                }
-            }
-            this.color = {
-                foreground: WHITE,
-                background: BLACK
-            };
+        clear: function () {
             this.canvas.width = this.canvas.width;  // forces canvas to redraw
             this.context.fillStyle = 'black';
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        },
+
+        reset: function () {
+            this.flags.reset();
+            this.color.reset();
         },
 
         init: function (id) {
@@ -115,8 +134,71 @@ ansi = ansi || {};
 
         esc: function () {
             var args = Array.prototype.slice.call(arguments),
-                opcode = args.shift();
-            console.log(opcode, args);
+                opcode = args.shift(),
+                i = 0,
+                max;
+            switch (opcode) {
+            case 'A':
+                // Move up
+                this.position.row -= args[0] || 1;
+                break;
+            case 'B':
+                // Move down
+                this.position.row += args[0] || 1;
+                break;
+            case 'C':
+                // Move right
+                this.position.column += args[0] || 1;
+                break;
+            case 'D':
+                // Move left
+                this.position.column -= args[0] || 1;
+            case 'f':
+            case 'H':
+                this.position.row = args[0] || 1;
+                this.position.column = args[1] || 1;
+                break;
+            case 's':
+                this.position.save()
+                break;
+            case 'n':
+                if (args[0] === 6) {
+                    // this.write('\\x1b\\x5b' + cursor.getPosition().join(';') + 'R');
+                    return;
+                }
+                break;
+            case 'u':
+                this.position.load()
+                break;
+            case 'm':
+                console.log(args);
+                for (i = 0, max = args.length; i < max; i++) {
+                    // if (args[i] === null || args[i] === NONE) {
+                        // this.flags.reset();
+                    if (args[i] === NONE) {
+                        this.flags.reset();
+                    } else if (args[i] >= 30 && args[i] <= 37) {
+                        this.color.foreground = args[i] - 30;
+                    } else if (args[i] >= 40 && args[i] <= 47) {
+                        this.color.background = args[i] - 40;
+                    } else {
+                        this.flags[args[i]] = true;
+                    }
+                }
+                break;
+            case 'J':
+                if (args[0] === 2) {
+                    this.reset();
+                }
+                break;
+            case 'K':
+                // del cur cursor to end of line
+                break;
+            case 'p':
+            default:
+                // Unimplemented
+                break;
+            }
         },
 
         parse: function (buffer) {
@@ -145,8 +227,8 @@ ansi = ansi || {};
         },
 
         write: function (text) {
-            this.color.foreground = Math.floor(Math.random()*8); //killme
-            this.color.background = Math.floor(Math.random()*8); //killme
+            // this.color.foreground = Math.floor(Math.random()*8); //killme
+            // this.color.background = Math.floor(Math.random()*8); //killme
             var x, y, i, max, fg, bg, character;
             bg = COLORS[this.color.background];
             fg = COLORS[this.color.foreground];
@@ -162,7 +244,7 @@ ansi = ansi || {};
             // handle linebreaks. we can either have write trim >80 and call
             // itself recursively with the remainder or do this character by
             // character after calculating position.
-            this.context.fillRect(this.position.column * this.glyph.width, this.position.row * this.glyph.height, this.glyph.width * text.length, this.glyph.height);
+            this.context.fillRect((this.position.column - 1) * this.glyph.width, (this.position.row - 1) * this.glyph.height, this.glyph.width * text.length, this.glyph.height);
             this.context.fillStyle = rgb_to_hex(fg);
             for (i = 0, max = text.length; i < max; i++) {
                 character = text.charAt(i);
