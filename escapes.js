@@ -1,5 +1,5 @@
-/*jslint browser: true, plusplus: true */
-/*global ansi */
+/*jslint bitwise: true, browser: true, plusplus: true */
+/*global ansi: true */
 "use strict";
 
 ansi = ansi || {};
@@ -33,6 +33,8 @@ ansi = ansi || {};
             [170, 170, 170]   // White
         ];
 
+    // Returns a boolean indicating whether or not the browser supports canvas
+    // and canvas text.
     function canvas_supported() {
         var canvas = document.createElement('canvas'),
             context = canvas.getContext && canvas.getContext('2d');
@@ -92,14 +94,8 @@ ansi = ansi || {};
                 delete this.saved;
             },
             move_by: function (columns, rows) {
-                var amp_a = this.column;
-                var amp_b = this.row;
-
                 this.column += columns;
                 this.row += rows;
-
-                var tmp_a = this.column;
-                var tmp_b = this.row;
 
                 // Enforce boundaries
                 this.column = Math.max(this.column, 1);
@@ -107,8 +103,6 @@ ansi = ansi || {};
                 this.row = Math.max(this.row, 1);
                 this.row = Math.min(this.row, 25);
 
-                console.log("ROW: before: %d, requested: %d, enforced: %d", amp_b, tmp_b, this.row);
-                console.log("COL: before: %d, requested: %d, enforced: %d", amp_a, tmp_a, this.column);
             }
         },
 
@@ -157,22 +151,22 @@ ansi = ansi || {};
             switch (opcode) {
             case 'A':  // Cursor Up
                 arg = args[0] || 1;
-                this.cursor.move_by(0, -arg)
+                this.cursor.move_by(0, -arg);
                 break;
 
             case 'B':  // Cursor Down
                 arg = args[0] || 1;
-                this.cursor.move_by(0, arg)
+                this.cursor.move_by(0, arg);
                 break;
 
             case 'C':  // Cursor Forward
                 arg = args[0] || 1;
-                this.cursor.move_by(arg, 0)
+                this.cursor.move_by(arg, 0);
                 break;
 
             case 'D':  // Cursor Backward
                 arg = args[0] || 1;
-                this.cursor.move_by(-arg, 0)
+                this.cursor.move_by(-arg, 0);
                 break;
 
             case 'f':  // Horizontal & Vertical Position
@@ -182,11 +176,11 @@ ansi = ansi || {};
                 break;
 
             case 's':  // Save Cursor Position
-                this.cursor.save()
+                this.cursor.save();
                 break;
 
             case 'u':  // Restore Cursor Position
-                this.cursor.load()
+                this.cursor.load();
                 break;
 
             case 'm':  // Set Graphics Rendition
@@ -219,22 +213,15 @@ ansi = ansi || {};
             case 'K':  // Erase Line
                 // del cur cursor to end of line
                 break;
-
-            case 'h':  // Set Mode
-            case 'p':  // Keyboard
-            default:
-                // Unimplemented
-                break;
             }
         },
 
         parse: function (buffer) {
-            var re = /(?:\x1b\x5b)([=;0-9]*?)([ABCDHJKfhlmnpsu])/gm,
+            var re = /(?:\x1b\x5b)([=;0-9]*?)([ABCDHJKfhlmnpsu])/g,
                 pos = 0,
                 opcode,
                 args,
-                match,
-                yielded = 0;
+                match;
             do {
                 pos = re.lastIndex;
                 match = re.exec(buffer);
@@ -242,24 +229,19 @@ ansi = ansi || {};
                     // Everything from current index to match is literal
                     if (match.index > pos) {
                         this.write(buffer.slice(pos, match.index));
-                        yielded += (match.index - pos);
-                    } else {
-                        yielded += match[0].length;
-                        opcode = match[2];
-                        args = to_int_array(match[1].split(';'));
-                        this.escape(opcode, args);
                     }
+                    opcode = match[2];
+                    args = to_int_array(match[1].split(';'));
+                    this.escape(opcode, args);
                 }
             } while (re.lastIndex !== 0);
             if (pos < buffer.length) {
                 this.write(buffer.slice(pos));
-                yielded += buffer.length - pos;
             }
-            console.log('yielded: %d, length: %d', yielded, buffer.length);
         },
 
         write: function (text) {
-            var x, y, i, length, fg, bg, character, cursor = this.cursor, CR = '\r', LF = '\n';
+            var x, y, i, length, fg, bg, character, cursor = this.cursor;
 
             fg = COLORS[this.color.foreground];
             if (this.flags & BRIGHT) {
@@ -289,20 +271,18 @@ ansi = ansi || {};
 
                 case '\n':
                     cursor.row++;
-                    // debugger;
                     break;
 
                 default:
                     if (character !== ' ') {
                         x = (cursor.column - 1) * this.glyph.width;
                         y = (cursor.row + cursor.scrolled - 1) * this.glyph.height;
-                        this.context.fillText('X', x, y);
+                        this.context.fillText(character, x, y);
                     }
 
                     if (cursor.column === 80) {
                         cursor.column = 1;
                         cursor.row++;
-                        // debugger;
                     } else {
                         cursor.column++;
                     }
@@ -312,12 +292,6 @@ ansi = ansi || {};
                 if (cursor.row > 25) {
                     cursor.scrolled = cursor.row - 25;
                     cursor.row = 25;
-                }
-                if (cursor.row > 25 || cursor.column > 80) {
-                    console.log('wtf!!!!');
-                }
-                if (cursor.row < 1 || cursor.column < 1) {
-                    console.log('>:-O');
                 }
             }
         }

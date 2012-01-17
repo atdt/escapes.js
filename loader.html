@@ -17,10 +17,15 @@
     <script src=loader.js></script>
     <script src=escapes.js></script>
     <script>
+      console.log('partly loaded');
       document.addEventListener('DOMContentLoaded', function () {
+          console.log('dom loaded');
           ansi.load('static/VIK.ANS', function (data) {
+              console.log('ajax loaded');
               ansi.draw.init('term');
+              console.log('inited');
               ansi.draw.parse(data);
+              console.log('done');
           });
       });
     </script>
