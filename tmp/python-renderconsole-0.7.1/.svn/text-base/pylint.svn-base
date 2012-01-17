@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/usr/bin/pylint --load-plugins=pylint_plugins.bedroomlan $*
+
+# End of file.

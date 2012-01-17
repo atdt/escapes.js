@@ -1,0 +1,32 @@
+python-renderconsole (0.7.2) unstable; urgency=low
+
+  * Changed to new-style integer division operator.
+
+ --
+
+python-renderconsole (0.7.1) unstable; urgency=high
+
+  * Fixed bug in python setup.py that stamped packages with the wrong version.
+
+ -- Alexios Chouchoulas <alexios@bedroomlan.org>  Thu, 19 Feb 2009 11:05:31 +0200
+
+python-renderconsole (0.7) unstable; urgency=medium
+
+  * Updated homepage.
+  * Made setup.py glean information from the debian infrastructure.
+
+ -- Alexios Chouchoulas <alexios@bedroomlan.org>  Thu, 19 Feb 2009 10:45:14 +0200
+
+python-renderconsole (0.6) unstable; urgency=medium
+
+  * Added default font for invocation simplicity.
+  * More packaging fixes (some may be kludges).
+  * Added ansi2img manpage.
+
+ -- Alexios Chouchoulas <alexios@bedroomlan.org>  Thu, 20 Nov 2008 16:58:55 +0200
+
+python-renderconsole (0.5) unstable; urgency=low
+
+  * Initial release.
+
+ -- Alexios Chouchoulas <alexios@bedroomlan.org>  Thu, 20 Nov 2008 01:13:09 +0200

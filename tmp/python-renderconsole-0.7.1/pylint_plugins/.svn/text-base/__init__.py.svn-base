@@ -1,0 +1,10 @@
+"""
+Local PyLint plugins.
+
+$Id$
+"""
+
+__all__ = ['bedroomlan',
+           ]
+
+# End of file.

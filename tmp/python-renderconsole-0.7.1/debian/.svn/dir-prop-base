@@ -1,0 +1,12 @@
+K 10
+svn:ignore
+V 102
+python-renderconsole
+stamp-*
+*.debhelper.log
+*.postinst.debhelper
+*.prerm.debhelper
+*.substvars
+files
+
+END

@@ -1,0 +1,207 @@
+#!/usr/bin/env python
+"""
+$Id$
+
+Copyright (C) 2008 Alexios Chouchoulas
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software Foundation,
+Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+"""
+
+
+import os
+import sys
+from optparse import OptionParser
+
+basedir = os.path.dirname (os.path.abspath (__file__))
+
+import renderconsole
+
+
+class ANSI2Image (object):
+    """
+    Convert one or more ANSI files to an image.
+    """
+
+    _usage = '[OPTIONS] [-f FONT] FILE-IN [-o FILE-OUT]'
+
+    _version = '.'.join (renderconsole.__version__.split ('.')[:2])
+
+    progname = os.path.basename (sys.argv[0])
+
+
+    def __init__ (self):
+        self.parser = None
+        self.options, self.args = self.parseCommandLineArguments()
+        self.validateCommandLineArguments (self.options, self.args)
+        self.run()
+    
+
+    def parseCommandLineArguments (self):
+        """
+        Parse command line arguments (currently very simple).
+        """
+        self.parser = OptionParser (usage='%prog ' + self._usage, version=self._version)
+        parser = self.parser
+    
+        parser.add_option ('-f', '--font', metavar='FONT-FILENAME',
+                           dest='font',
+                           help='The VGA font to render with. This must be a raw, '
+                           'uncompressed font. 9x16 fonts are 4,096 bytes long. The '
+                           'default is a built-in, standard US Latin (CP437) 8x16 VGA font.',
+                           )
+
+        parser.add_option ('-d', '--debug',
+                           action='store_true', dest='debug',
+                           help='Enable debugging mode. Prints out more.',
+                           )
+
+        parser.add_option ('-c', '--columns', metavar='NUMBER-OF-COLUMNS',
+                           dest='columns', type='int', default=80,
+                           help='Set the width of the virtual terminal (default: 80).',
+                           )
+
+        parser.add_option ('-r', '--rows', metavar='NUMBER-OF-ROWS',
+                           dest='rows', type='int', default=25,
+                           help='Set the height of the virtual terminal (default: 25).',
+                           )
+
+        parser.add_option ('-t', '--type', metavar='FORMAT',
+                           action='store', type='choice',
+                           choices=['png', 'PNG', 'xpm', 'XPM', 'GIF', 'gif'],
+                           dest='format', default='png',
+                           help='Output format, gif, png or xpm. (default: png)',
+                           )
+
+        parser.add_option ('-s', '--scroll',
+                           action='store_true', dest='scroll', default=False,
+                           help='If an ANSI file uses up more than the virtual screen, ' + \
+                           'scroll it. The default behaviour is to grow the screen height ' + \
+                           'to render long ANSI art pieces.',
+                           )
+        
+        parser.add_option ('-o', '--out', metavar='OUTPUT-FILENAME',
+                           dest='out', default=None,
+                           help='Set the output filename. The default behaviour is to use the ' + \
+                           'input filename with a different extension depending on the format.',
+                           )
+
+        return parser.parse_args()
+
+
+    def error (self, msg):
+        """
+        Fail with an error.
+        """
+        sys.stderr.write ("%s: %s\n" % (self.progname, msg.rstrip()))
+        sys.exit (1)
+
+
+    def syntax (self, msg):
+        """
+        Fail with an error.
+        """
+        sys.stderr.write ("%s: %s\n\n" % (self.progname, msg.rstrip()))
+        self.parser.print_help()
+        sys.exit (1)
+
+
+    def validateCommandLineArguments (self, options, args):
+        """
+        Validate the options and set up the object.
+        """
+        #if not self.options.font:
+        #    self.syntax ("The font must be specified.")
+
+        if len (self.args) != 1:
+            self.syntax ("Please specify an input file.")
+
+
+        return (options, args)
+        
+        
+
+    def run (self):
+        """
+        Run the converter.
+        """
+        renderconsole.debugEnabled = self.options.debug
+
+        # Select an output format.
+        screenClass = dict(
+            xpm=renderconsole.XPMWriter,
+            png=renderconsole.PNGWriter,
+            gif=renderconsole.GIFWriter,
+            ).get (self.options.format.lower())
+        if not screenClass:
+            self.error ('unknown format %s.' % self.options.format)
+
+        extension = screenClass.EXTENSION
+
+        infname = self.args[0]
+        
+        # What's the output file?
+        outfname = self.options.out
+        outfname = outfname or os.path.splitext (infname)[0] + extension
+        if outfname == '-':
+            outf = sys.stdout
+        else:
+            if os.path.abspath (os.path.normpath (outfname)) == \
+            os.path.abspath (os.path.normpath (infname)):
+                self.error ('the input and output files are the same.')
+                
+            try:
+                outf = file (outfname, 'wb')
+            except IOError, e:
+                self.error ('creating %s' % e)
+
+        # Load the font, if specified. Otherwise, use the default font.
+        if self.options.font:
+            try:
+                font = renderconsole.VGAFont (self.options.font)
+            except IOError, e:
+                self.error ('loading font: %s' % e)
+        else:
+            font = renderconsole.DefaultFont()
+
+        # Make the framebuffer, terminal and screen.
+        try:
+            rows = self.options.rows or 25
+            cols = self.options.columns or 80
+            fb = renderconsole.Framebuffer (cols, rows, growable=not self.options.scroll)
+            term = renderconsole.ANSITerminalEmulator (fb)
+            screen = screenClass (fb, font, stream=outf)
+
+        except Exception, e:
+            self.error ('failed to initialise. Reason given: %s' % e)
+
+        # Get data and render.
+        try:
+            # Open the file.
+            data = file (infname, 'rb').read()
+
+            # Render it all.
+            term.write (data)
+            screen.render()
+        except IOError, e:
+            self.error (str (e))
+            
+        except Exception, e:
+            self.error ('failed to render. Reason given: %s' % e)
+
+
+ANSI2Image()
+
+
+# End of file

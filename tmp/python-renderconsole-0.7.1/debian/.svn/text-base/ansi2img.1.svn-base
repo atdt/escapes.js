@@ -1,0 +1,192 @@
+.\"                              hey, Emacs:   -*- nroff -*-
+.\" ansi2img is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; see the file COPYING.  If not, write to
+.\" the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+.\"
+.TH ANSI2IMG 1 "November 20, 2008"
+.\" Please update the above date whenever this man page is modified.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins (default)
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+ansi2img
+.SH SYNOPSIS
+.B ansi2img
+.RI [-dhs?V]
+.RI [-c NUMBER-OF-COLUMNS]
+.RI [-r NUMBER-OF-ROWS]
+.RI [-f FONT-FILENAME]
+.RI [-t FORMAT]
+.RI [-o OUTPUT-FILENAME]
+.RI [--help]
+.RI [--version]
+.RI FILE
+.SH DESCRIPTION
+\fBansi2img\fP renders `ANSI' graphics from the BBS era as modern
+bitmap images.
+.PP
+So-called `ANSI' graphics are text files in one of the IBM PC extended `ASCII' encodings. The files include terminal directives for the MS-DOS terminal driver
+\fBANSI.SYS\fP, which implements a small subset of the ANSI X.364 standard for Control Sequences for Video Terminals.
+.PP
+With the special characters in the various IBM PC character sets, box-drawing and crude graphics were feasible. Using ANSI, these graphics could also be coloured and even repositioned for simple animations.
+.PP
+Such files were commonly used on Bulletin Board Systems (BBS) and other similar software and, despite (or perhaps because) of the limitations of the format, eventually developed into an art form.
+.PP
+\fBANSI.SYS\fP only supported a small subset of ANSI X.364, and common sense would have it that modern virtual terminals would be able to display these graphics unhindered. Unfortunately, there are three obstacles in this.
+.IP 1. 4
+The encodings (`codepages') themselves need a certain amount of expertise to render the intended characters on modern (usually Unicode-based) terminals.
+.IP 2. 4
+Modern fonts are designed with legibility in mind, and have different metrics and proportions to the low-resolution bitmap fonts of the Eighties.
+.IP 3. 4
+Most modern virtual terminals are either incapable of displaying ANSI
+X.364 escape sequences (the terminal emulator of Windows Vista is one
+example), or support a subtly different set of commands and features.
+These factors limit the rendering accuracy of ANSI graphics.
+.PP
+This program mitigates all three issues by rendering characters in the
+correct CGA, EGA or VGA fonts and encodings, and using a virtual
+terminal of its own which fully supports the MS-DOS \fBANSI.SYS\fP
+feature set. The output of the terminal is then made available in a
+raster image format of the user's choice.
+.SH OPTIONS
+\fBansi2img\fP accepts the following options:
+.TP
+.BR  -c ", " --columns=NUMBER-OF-COLUMNS
+Sets the number of columns of the virtual terminal. The default is
+80. The vast majority of ANSI graphics is meant to be displayed on an
+80-column terminal. Since these files were sent out on slow media
+(PSTN modems), optimisation reigned supreme, and many files actually
+\fBassume\fP an 80-column display. Such files will not display
+properly, not even on wider terminals.
+.TP
+.BR  -d ", " --debug
+Enables debugging mode, which prints out a little bit more
+information. As expected, this output is not meant for public
+consumption.
+.TP
+.BR  -f ", " --font=FONT-FILENAME
+Renders using the specified font. The default is to use the built-in
+font, an 8x16 VGA font in IBM's US encoding (CP437).
+.TP
+.BR  -o ", " --out=FILENAME
+Specify the output filename. By default, this is the same as the input
+filename, with its (optional) extension replaced by one appropriate
+for the output format. If the output filename is \fB-\fP, standard
+output is used.
+.TP
+.BR  -r ", " --rows=NUMBER-OF-ROWS
+Likewise, sets the number of rows of the virtual terminal. The default
+is 25. Most MS-DOS terminal emulators used one to three lines of the
+standard 80x25 mode for status information. It is thus common for
+graphics intended to be used as BBS menus to be no more than 23 lines
+long. More artistic, less usable graphics may be far taller than this
+(up to several 25-row pages).
+.TP
+.BR  -s ", " --scroll
+A physical text-mode screen scrolls upwards after the 25th line is
+filled, and the topmost line is permanently lost. This is not
+desirable for the purposes of this program. By default, then, rather
+than scrolling, the virtual terminal is \fBenlarged\fP vertically by
+one line on demand after the image grows past the setting of \fB-r\fP.
+.RS
+.PP
+Specifying \fB-s\fP reverts to the behaviour of hardware terminals,
+but will lose information if the file is longer than the terminal.
+.PP
+Please note that this has another side-effect: after scrolling,
+\fBANSI.SYS\fP fills the fresh blank line with blanks in the last
+background colour set. If the background is not black (the default
+colour), colour bands may appear when the terminal scrolls. This is
+not a bug of this program, but an intended behaviour. Some ANSI
+graphics may even require it, although the author has never seen one
+(on the contrary, most ANSI authors did their best to avoid this
+effect by resetting the background colour to black at the end of every
+line).
+.RE
+.TP
+.BR  -t ", " --type=OUTPUT-FORMAT
+Specify the output image format. The default format is PNG, but GIF
+and XPM may also be specified (in either upper or lower case).
+.TP
+.BR  -? ", " --help
+List all available options and their meanings.
+.TP
+.BR  -h ", " --brief-help ", " --usage
+Display brief help.
+.TP
+.BR  -V ", " --version
+Show version of program.
+.SH FONTS
+.PP
+Until the advent of the VGA, IBM PCs had a range of 256 visible glyphs
+per font. The VGA can display up to 512 glyphs by using up more video
+RAM and turning off bright backgrounds and blinking. This, however,
+was such a rare feature to see used that no BBS software assumed it
+(and there was never a standard for what those upper 256 characters
+had to look like, so portability was nil).
+.PP
+The IBM MDA, the first display adapter (a text-only, monochrome
+device) offered a 9x14 font, but this is not (as of yet) supported by
+this program.
+.PP
+The IBM CGA supported 8x8 fonts (200 scanlines). The IBM EGA supported
+soft fonts of various sizes, the usual being 8x14. It also included
+the CGA 8x8 font for compatibility.
+.PP
+The IBM VGA contained the CGA and EGA fonts and added an 8x16 font
+(which is rendered as 9x16 at the default text resolution of 720x480,
+which is still with us).
+.PP
+EGA and VGA fonts were simple arrays of bytes. Each character from 0
+to 255 was represented by 8, 14, or 16 bytes. The least significant
+bit of each byte represented the rightmost pixel of each character
+cell. This resulted in fonts of 2,048, 3,584 and 4,096 bytes.
+.PP
+This program supports any such uncompressed, unencoded font without
+metadata, including fonts with arbitrary character heights.
+.PP
+A default VGA font is built into the program.
+.SH HISTORY
+.PP
+This program is descended from the code of \fIThe Quarter\fP
+(\fItq\fP) the ANSI graphics editor of \fIProject Megistos\fP, a
+complete BBS software suite for Linux written and maintained by
+Alexios Chouchoulas from 1993 onwards.
+.SH BUGS
+.PP
+If there are any serious bugs, they are probably lurking in the
+terminal emulation itself, and they are sufficiently exotic: the
+program has so far been tested on a wide range of ANSI files of
+different authors, styles and purposes.
+.SH RESTRICTIONS
+\fBansi2img\fP does not support ANSI animations or blinking. The
+latter may be a feature.
+.SH AUTHOR
+Written and maintained by Alexios Chouchoulas <alexios@bedroomlan.org>.
+.SH "REPORTING BUGS"
+Report bugs to Alexios Chouchoulas <alexios@bedroomlan.org>.
+.SH COPYRIGHT
+Copyright \(co 2008 Alexios Chouchoulas <alexios@bedroomlan.org>.
+.br
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+\"  LocalWords:  ansi2img ansi dhs BBS coloured CGA
+\"  LocalWords:  codepages PSTN optimisation CP tq Megistos

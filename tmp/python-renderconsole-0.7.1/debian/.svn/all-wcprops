@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/renderconsole/!svn/ver/20/trunk/debian
+END
+control
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/renderconsole/!svn/ver/20/trunk/debian/control
+END
+dirs
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/renderconsole/!svn/ver/5/trunk/debian/dirs
+END
+compat
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/renderconsole/!svn/ver/4/trunk/debian/compat
+END
+changelog
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/renderconsole/!svn/ver/21/trunk/debian/changelog
+END
+ansi2img.1
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/renderconsole/!svn/ver/16/trunk/debian/ansi2img.1
+END
+copyright
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/renderconsole/!svn/ver/20/trunk/debian/copyright
+END
+docs
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/renderconsole/!svn/ver/4/trunk/debian/docs
+END
+rules
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/renderconsole/!svn/ver/6/trunk/debian/rules
+END
+manpages
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/renderconsole/!svn/ver/18/trunk/debian/manpages
+END
+pycompat
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/renderconsole/!svn/ver/6/trunk/debian/pycompat
+END
+python-renderconsole.examples
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/renderconsole/!svn/ver/7/trunk/debian/python-renderconsole.examples
+END

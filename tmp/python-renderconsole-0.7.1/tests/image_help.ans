@@ -1,0 +1,22 @@
+[0m[H[2J[44;1m Help -- Editing commands                                                       [0m
+
+
+[33;1mAlt-A   [0mToggle Attribute Drawing mode    [33;1mAlt-P  [0mPick up Character under cursor
+[33;1mAlt-B   [0mBlock Select Mode[16C[33;1mAlt-S  [0mSave file
+[33;1mAlt-C   [0mPlace grabbed charecter (ALT-P)  [33;1mAlt-U  [0mPick up Color Under cursor
+[33;1mAlt-D   [0mToggle Line Drawing mode[9C[33;1mAlt-X  [0mExit DuhDraw
+[33;1mAlt-E   [0mErase image[22C[33;1mAlt-Y  [0mDelete Line
+[33;1mAlt-F   [0mSelect fore/background colours   [33;1mArrows [0mMove around
+[33;1mAlt-H   [0mThis help screen[17C[33;1mCtrl-N [0mMove down
+[33;1mAlt-I   [0mInsert line[22C[33;1mCtrl-P [0mMove up
+[33;1mAlt-J   [0mInsert column[20C[33;1mCtrl-B [0mMove left
+[33;1mAlt-K   [0mDelete column[20C[33;1mCtrl-F [0mMove right
+[33;1mAlt-L   [0mLoad file[24C[33;1mCtrl-A [0mBeginning of line/drawing area
+[33;1mAlt-<,> [0mInc/Decrement F1-F10 set[9C[33;1mCtrl-E [0mEnd of line/drawing area
+[33;1mAlt-n   [0m(0-9,-,=) Select F1-F10 set[6C[33;1mHome   [0mBeginning of line/drawing area
+[33;1mInsert  [0mToggle Insert mode[15C[33;1mEnd    [0mEnd of Line/Ansi
+[33;1mPgUp    [0mUp one page[22C[33;1mPgDn   [0mDown one page
+[33;1mCtrl-U  [0mUp one page[22C[33;1mCtrl-V [0mDown one page
+
+
+[44;1m Press any key to go back.                                                      [0m

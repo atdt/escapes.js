@@ -1,0 +1,12 @@
+K 10
+svn:ignore
+V 80
+MANIFEST
+*.pyc
+build
+dist
+python-build-stamp-*
+renderconsole.egg-info
+*egg-info
+
+END

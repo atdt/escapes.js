@@ -1,0 +1,37 @@
+[0m[H[2J[31;1mCGA ATTRIBUTE COLOUR MIXING (WITH BLINKING OFF)[6C[37mÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+[53C³ (no blink only) ³
+[33mBackground [37mÄÄÄÄÄÄ [32mblk blk blk blk[5Cdrk drk drk    [37m³[32mlgt lgt lgt[6C[37m³
+[33mForeground [37mÄÄÄÄÄÄ[5C[32mdrk drk drk drk lgt lgt lgt lgt[37m³[32mwht whi wht wht  [37m³
+[53C³[17C³
+[33mBrightness [37mÄÄÄÄÄÄ 0%[14C33%[13C66%³[12C100% ³
+[14CÚÄÄÒÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄÒÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄÒÄÄÄÅÄÄÄÂÄÄÄÂÄÄÄÒÄÄÄÄÄ´
+[33mHue[11C[37m³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5C[35mMagenta  [37m³[6C[0;35m°°°°±±±±²²²²ÛÛÛÛ[45;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³[6C[0;35m°°°°±±±±²²²²ÛÛÛÛ[45;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5C[34mBlue[5C[37m³[6C[0;34m°°°°±±±±²²²²ÛÛÛÛ[44;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³[6C[0;34m°°°°±±±±²²²²ÛÛÛÛ[44;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³[13C 
+[14C³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5C[36mCyan[5C[37m³[6C[0;36m°°°°±±±±²²²²ÛÛÛÛ[46;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³[6C[0;36m°°°°±±±±²²²²ÛÛÛÛ[46;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5C[32mGreen    [37m³[6C[0;32m°°°°±±±±²²²²ÛÛÛÛ[42;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³[6C[0;32m°°°°±±±±²²²²ÛÛÛÛ[42;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5C[33mYellow/  [37m³[6C[0;33m°°°°±±±±²²²²ÛÛÛÛ[43;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[5C[0;33mBrown    [37;1m³[6C[0;33m°°°°±±±±²²²²ÛÛÛÛ[43;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5C[31mRed[6C[37m³[6C[0;31m°°°°±±±±²²²²ÛÛÛÛ[41;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³[6C[0;31m°°°°±±±±²²²²ÛÛÛÛ[41;1m°°°°±±±±²²²²ÛÛÛÛ[37;5m°°°°±±±±²²²²[0;1mÛÛÛÛ  ³
+[14C³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[5CWhite/   ³[6C[30m°°°°±±±±²²²²ÛÛÛÛ[0;5m°°°°±±±±²²²²ÛÛÛÛ[0;47;1m°°°°±±±±²²²²[40mÛÛÛÛ  ³
+[5C[30mBlack    [37m³[6C[30m°°°°±±±±²²²²ÛÛÛÛ[0;5m°°°°±±±±²²²²ÛÛÛÛ[0;47;1m°°°°±±±±²²²²[40mÛÛÛÛ  ³
+[30m    [10C[37m³  º   ³   ³   ³   º   ³   ³   ³   º   ³   ³   ³   º[5C³
+[14CÀÄÄÐÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÐÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÐÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÐÄÄÄÄÄÙ
+[33mCharacter   [37mÄÄÄÄÄ [ ] °°  ±±  ²²  ÛÛ  °°  ±±  ²²  ÛÛ  °°  ±±  ²²  ÛÛ
+[33mkey (set 5) [37mÄÄÄÄÄ [32m' ' f1  f2  f3  f4  f1  f2  f3  f4  f1  f2  f3  f4
+
+[37m(an 8-column mode/font helps hide away those ugly vertical lines shown
+on the grey blocks of 9-column fonts on the EGA/VGA cards and compatibles.
+The CGA is OK in this respect, but there aren't very many people with one
+of those these days). 

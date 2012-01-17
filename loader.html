@@ -1,38 +1,26 @@
 <!doctype html>
 <html>
-  <!-- 9 x 15(!) -->
   <head>
     <meta charset=utf-8>
     <title>loader.html</title>
-    <link rel=stylesheet href=css/stylesheet.css type=text/css>
-    <style>
-      body {
-        font-family: 'PerfectDOSVGA437Regular';
-        background: black;
-        margin: 0;
-        padding: 0;
-
-      }
-      figure {
-        margin: auto;
-        width: 800px;
-        height: 475;
-      }
-    </style>
-
+    <link rel=stylesheet href=css/style.css>
   <body>
-    <!-- force the font to load -->
-    <p style="font-family: 'PerfectDOSVGA437Regular';">hello</p>
-
     <!-- terminal -->
     <figure>
-      <canvas id="term" width="800" height="475">
+      <canvas id="term" width="800" height="1800">
         Your browser does not support HTML5 Canvas.
       </canvas>
     </figure>
 
     <!-- scripts -->
-    <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
+    <!-- <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script> -->
     <script src=loader.js></script>
     <script src=escapes.js></script>
-    <script src=scratch.js></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          ansi.load('static/VIK.ANS', function (data) {
+              ansi.draw.init('term');
+              ansi.draw.parse(data);
+          });
+      });
+    </script>
