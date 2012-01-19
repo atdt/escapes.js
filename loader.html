@@ -7,7 +7,7 @@
   <body>
     <!-- terminal -->
     <figure>
-      <canvas id="term" width="800" height="1800">
+      <canvas id="term" width="800" height="4800">
         Your browser does not support HTML5 Canvas.
       </canvas>
     </figure>
@@ -20,7 +20,7 @@
       console.log('partly loaded');
       document.addEventListener('DOMContentLoaded', function () {
           console.log('dom loaded');
-          ansi.load('static/VIK.ANS', function (data) {
+          ansi.load('static/DEFCON9.ANS', function (data) {
               console.log('ajax loaded');
               ansi.draw.init('term');
               console.log('inited');

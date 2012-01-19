@@ -101,7 +101,7 @@ ansi = ansi || {};
                 this.column = Math.max(this.column, 1);
                 this.column = Math.min(this.column, 80);
                 this.row = Math.max(this.row, 1);
-                this.row = Math.min(this.row, 25);
+                // this.row = Math.min(this.row, 25);
 
             }
         },
@@ -117,7 +117,7 @@ ansi = ansi || {};
 
         glyph: {
             width: 10,
-            height: 18
+            height: 17
         },
 
         //
@@ -186,12 +186,14 @@ ansi = ansi || {};
             case 'm':  // Set Graphics Rendition
                 for (i = 0, length = args.length; i < length; i++) {
                     arg = args[i];
+                    this.color.reset();
                     if (arg === NONE) {
                         this.flags = NONE;
                     } else {
                         switch (Math.floor(arg / 10)) {
                         case 0:
                             this.flags |= arg;
+                            this.color.reset();
                             break;
                         case 3:
                             this.color.foreground = arg - 30;
@@ -247,20 +249,14 @@ ansi = ansi || {};
             if (this.flags & BRIGHT) {
                 fg = brighten(fg);
             }
+            fg = rgb_to_hex(fg);
 
             bg = COLORS[this.color.background];
             if (this.flags & BLINK) {
                 bg = brighten(bg);
             }
+            bg = rgb_to_hex(bg);
 
-            // this.context.fillStyle = rgb_to_hex(bg);
-            // draw a rectangle and fill it with the background color. it'll be
-            // the size of the text, which is probably broken since it won't
-            // handle linebreaks. we can either have write trim >80 and call
-            // itself recursively with the remainder or do this character by
-            // character after calculating position.
-            // this.context.fillRect((cursor.column - 1) * this.glyph.width, (cursor.row - 1) * this.glyph.height, this.glyph.width * text.length, this.glyph.height);
-            this.context.fillStyle = rgb_to_hex(fg);
 
             for (i = 0, length = text.length; i < length; i++) {
                 character = text.charAt(i);
@@ -274,12 +270,16 @@ ansi = ansi || {};
                     break;
 
                 default:
+                    x = (cursor.column - 1) * this.glyph.width;
+                    y = (cursor.row + cursor.scrolled - 1) * this.glyph.height;
+                    if (!(this.color.background === BLACK)) {
+                        this.context.fillStyle = bg;
+                        this.context.fillRect(x, y, 10, 17);
+                    }
                     if (character !== ' ') {
-                        x = (cursor.column - 1) * this.glyph.width;
-                        y = (cursor.row + cursor.scrolled - 1) * this.glyph.height;
+                        this.context.fillStyle = fg;
                         this.context.fillText(character, x, y);
                     }
-
                     if (cursor.column === 80) {
                         cursor.column = 1;
                         cursor.row++;
@@ -289,10 +289,10 @@ ansi = ansi || {};
                     break;
                 }
 
-                if (cursor.row > 25) {
-                    cursor.scrolled = cursor.row - 25;
-                    cursor.row = 25;
-                }
+                // if (cursor.row > 25) {
+                //     cursor.scrolled = cursor.row - 25;
+                //     cursor.row = 25;
+                // }
             }
         }
     };
