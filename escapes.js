@@ -289,6 +289,7 @@ ansi = ansi || {};
                     break;
                 }
 
+                // (broken somehow)
                 // if (cursor.row > 25) {
                 //     cursor.scrolled = cursor.row - 25;
                 //     cursor.row = 25;
