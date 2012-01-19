@@ -101,7 +101,7 @@ ansi = ansi || {};
                 this.column = Math.max(this.column, 1);
                 this.column = Math.min(this.column, 80);
                 this.row = Math.max(this.row, 1);
-                this.row = Math.min(this.row, 25);
+                // this.row = Math.min(this.row, 25);
 
             }
         },
@@ -186,12 +186,14 @@ ansi = ansi || {};
             case 'm':  // Set Graphics Rendition
                 for (i = 0, length = args.length; i < length; i++) {
                     arg = args[i];
+                    this.color.reset();
                     if (arg === NONE) {
                         this.flags = NONE;
                     } else {
                         switch (Math.floor(arg / 10)) {
                         case 0:
                             this.flags |= arg;
+                            this.color.reset();
                             break;
                         case 3:
                             this.color.foreground = arg - 30;
@@ -270,13 +272,13 @@ ansi = ansi || {};
                 default:
                     x = (cursor.column - 1) * this.glyph.width;
                     y = (cursor.row + cursor.scrolled - 1) * this.glyph.height;
+                    if (!(this.color.background === BLACK)) {
+                        this.context.fillStyle = bg;
+                        this.context.fillRect(x, y, 10, 17);
+                    }
                     if (character !== ' ') {
                         this.context.fillStyle = fg;
                         this.context.fillText(character, x, y);
-                    }
-                    if (!this.color.background === BLACK) {
-                        this.context.fillStyle = bg;
-                        this.context.fillRect(x, y, 10, 17);
                     }
                     if (cursor.column === 80) {
                         cursor.column = 1;
@@ -287,10 +289,10 @@ ansi = ansi || {};
                     break;
                 }
 
-                if (cursor.row > 25) {
-                    cursor.scrolled = cursor.row - 25;
-                    cursor.row = 25;
-                }
+                // if (cursor.row > 25) {
+                //     cursor.scrolled = cursor.row - 25;
+                //     cursor.row = 25;
+                // }
             }
         }
     };
