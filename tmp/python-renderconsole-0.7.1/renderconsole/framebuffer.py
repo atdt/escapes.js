@@ -31,7 +31,7 @@ class Char (dict):
     bg = property (fget=lambda self: self ['bg'])
     attr = property (fget=lambda self: self ['attr'])
     char = property (fget=lambda self: self ['char'])
-    
+
 
 class Framebuffer (object):
     """
@@ -48,7 +48,7 @@ class Framebuffer (object):
     BROWN = 6
     GREY = 7
     GRAY = 7                            # Merkin alias
-    
+
     DARK_GREY = 8
     DARK_GRAY = 8                       # Merkin alias
     LIGHT_BLUE = 9
@@ -65,8 +65,8 @@ class Framebuffer (object):
     # Attributes.
     PLAIN = 0
     INVERSE = 1
-    
-    
+
+
     def __init__ (self, width, height, growable=False):
         self.width = width
         self.height = 0
@@ -80,12 +80,19 @@ class Framebuffer (object):
         self.data = []
         for line in xrange (height):
             self.grow()
-            
+
         debug ("Created %dx%d virtual screen." % (self.width, self.height))
 
         self.goto (0, 0)
 
 
+    @property
+    def bg(*args, **kwargs):
+        print "bg set: ", args, kwargs
+
+    @property
+    def fg(*args, **kwargs):
+        print "fg set: ", args, kwargs
     def c (self, char, fg=None, bg=None, attr=None):
         """
         Yield a character tuple. Use defaults.

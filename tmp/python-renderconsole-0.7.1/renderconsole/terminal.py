@@ -30,7 +30,7 @@ class TerminalEmulator (object):
     def __init__ (self, framebuffer):
         self.fb = framebuffer
 
-        
+
     def write (self, string):
         """
         Send a string to the framebuffer.
@@ -65,8 +65,8 @@ class ANSITerminalEmulator (TerminalEmulator):
         self.state = self.OUTSIDE
         self.stored_pos = None
         self.params = ''
-            
-        
+
+
     def write (self, string):
         """
         Decode ANSI escape sequences and send the string to the framebuffer.
@@ -96,7 +96,7 @@ class ANSITerminalEmulator (TerminalEmulator):
         if char == 8:
             self.fb.goLeft()
             return
-            
+
         # Delete
         if char == 127:
             # Should we handle this some other way?
@@ -138,7 +138,7 @@ class ANSITerminalEmulator (TerminalEmulator):
             return
 
         # Anything else, we stay in this mode, dropping characters.
-            
+
 
     def handle_escbkt (self, char):
         """
@@ -165,7 +165,7 @@ class ANSITerminalEmulator (TerminalEmulator):
         elif char == 'D':
             self.fb.goLeft (maybe_int (self.params, 1))
             self.state = self.OUTSIDE
-            
+
         # Go to row (absolute): ESC [ [num] d
         elif char in 'd`':
             # Rows are 1-based, we're 0-based.
@@ -209,7 +209,7 @@ class ANSITerminalEmulator (TerminalEmulator):
                 y, x = params, ''
             else:
                 y, x = '', ''
-                
+
             self.fb.goto (maybe_int (x, 1) - 1, maybe_int (y, 1) - 1)
             self.state = self.OUTSIDE
 
@@ -302,5 +302,5 @@ class ANSITerminalEmulator (TerminalEmulator):
         """
         return self._CGAColours [x]
 
-    
+
 # End of file.

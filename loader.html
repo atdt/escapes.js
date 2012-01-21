@@ -7,7 +7,7 @@
   <body>
     <!-- terminal -->
     <figure>
-      <canvas id="term" width="800" height="4800">
+      <canvas id="term" width="640" height="4800">
         Your browser does not support HTML5 Canvas.
       </canvas>
     </figure>
@@ -15,16 +15,16 @@
     <!-- scripts -->
     <!-- <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script> -->
     <script src=loader.js></script>
-    <script src=escapes.js></script>
+    <script src=dosfont.js></script>
     <script>
       console.log('partly loaded');
       document.addEventListener('DOMContentLoaded', function () {
           console.log('dom loaded');
-          ansi.load('static/DEFCON9.ANS', function (data) {
+          escapes.load('static/DEFCON9.ANS', function (data) {
               console.log('ajax loaded');
-              ansi.draw.init('term');
+              escapes.init('term');
               console.log('inited');
-              ansi.draw.parse(data);
+              escapes.parse(data);
               console.log('done');
           });
       });

@@ -44,7 +44,7 @@ class VGAFont (object):
     width = 8
 
     numChars = 256
-    
+
     def __init__ (self, filename):
         self.filename = filename
 
@@ -63,7 +63,7 @@ class VGAFont (object):
         size = len (self.data)
         if size % 256:
             raise TypeError ('This is probably not a raw, uncompressed VGA font.')
-        
+
         self.height = size // 256
         debug ("Font is 8x%(height)d." % self.__dict__)
 
@@ -91,7 +91,7 @@ class VGAFont (object):
         def renderLine (line):
             "Render a single raster."
             return ''.join ([ (line & bit) and mark or space for bit in self._bitmap ])
-        
+
         return map (renderLine, self.chars [char])
 
 
