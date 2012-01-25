@@ -1,8 +1,0 @@
-ansi2img.py
-setup.py
-renderconsole/__init__.py
-renderconsole/font.py
-renderconsole/framebuffer.py
-renderconsole/screen.py
-renderconsole/terminal.py
-renderconsole/util.py
