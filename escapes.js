@@ -6,24 +6,28 @@
 //                            _|                 ___/
 //
 
+//  escapes.js 
+//  http://github.com/atdt/escapes.js
+//  Copyright (C) 2012 Ori Livneh
+// 
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+// 
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+
 /*jslint bitwise: true, browser: true, plusplus: true, unparam: true */
 /*globals escapes: true */
 
+// greetz to deniz.
 
 var escapes = (function () {
     "use strict";
     var escapes = {},
-
-// Graphic modes
-
-        NONE      = 0x0,
-        BRIGHT    = 0x1,
-        UNDERLINE = 0x4,
-        BLINK     = 0x5,
-        REVERSE   = 0x7,
-        INVISIBLE = 0x9,
-
-// Color codes
 
         BLACK   = 0,
         RED     = 1,
@@ -33,6 +37,13 @@ var escapes = (function () {
         MAGENTA = 5,
         CYAN    = 6,
         WHITE   = 7,
+
+        NONE      = 0x0,
+        BRIGHT    = 0x1,
+        UNDERLINE = 0x4,
+        BLINK     = 0x5,
+        REVERSE   = 0x7,
+        INVISIBLE = 0x9,
 
 // Colors expressed as RGBA arrays
 
@@ -47,36 +58,14 @@ var escapes = (function () {
             [170, 170, 170, 255]     // White
         ],
 
-        buffer_canvas,
-        buffer_context,
-        bitmap,
-        pixel_array,
+        MAX_HEIGHT = 4000,  // px.
+
         font;
-
-// Create a hidden canvas element the size of a single character. We'll use it
-// to draw individual glyphs before rendering them to the main canvas.
-
-    buffer_canvas = document.createElement('canvas');
-    buffer_canvas.width = 8;
-    buffer_canvas.height = 16;
-    buffer_context = buffer_canvas.getContext('2d');
-    bitmap = buffer_context.createImageData(8, 16);
-    pixel_array = bitmap.data;
-
-// Returns a boolean indicating whether or not the browser supports canvas
-// and canvas text.
-
-    function canvas_supported() {
-        var canvas = document.createElement('canvas'),
-            context = canvas.getContext && canvas.getContext('2d');
-        return typeof context.fillText === 'function';
-    }
 
     function get_color(code, bright) {
         var rgba = COLORS[code];
 
-// The bright version of each color is that color with a value of 85 added to
-// each color channel.
+// The bright version of each color adds 85 to each color channel
 
         if (bright) {
             rgba = rgba.slice(0);
@@ -95,38 +84,6 @@ var escapes = (function () {
         return array;
     }
 
-// Draw a letterform on the buffer canvas using the specified foreground and
-// background colors and return its pixel data.
-
-    function rasterize(charcode, foreground, background) {
-        var letterform, x, y, i, row, offset, color;
-
-        letterform = font[charcode];
-
-// Each letterform comprises sixteen bytes, with each byte representing a row
-// of eight pixels.
-
-        for (y = 0; y < 16; y++) {
-            row = letterform[y];
-
-// Individual bits are either filled in (1) or empty (0). To get a value for
-// each pixel, we shift bits to the right and bitwise with AND.
-
-            for (x = 7; x >= 0; x--) {
-                offset = (4 * x) + (32 * y);
-                color = row & 1 ? foreground : background;
-
-// Each pixel is represented by four array elements, representing the intensity
-// of the red, green, blue, and alpha channels, respectively.
-
-                for (i = 0; i < 4; i++) {
-                    pixel_array[offset + i] = color[i];
-                }
-                row >>= 1;
-            }
-        }
-        return bitmap;
-    }
 
     escapes = {
 
@@ -138,11 +95,11 @@ var escapes = (function () {
         cursor: {
             column: 1,
             row: 1,
-            scrolled: 0,   // Lines that scrolled off the top
+            scrollback: 0,
             reset: function () {
                 this.column = 1;
                 this.row = 1;
-                this.scrolled = 0;
+                this.scrollback = 0;
             },
             save: function () {
                 var self = this;
@@ -163,11 +120,10 @@ var escapes = (function () {
 // If the requested movement pushed the cursor out of bounds, return cursor to
 // boundary.
 
-                // Enforce boundaries
                 this.column = Math.max(this.column, 1);
                 this.column = Math.min(this.column, 80);
                 this.row = Math.max(this.row, 1);
-                // this.row = Math.min(this.row, 25);
+                this.row = Math.min(this.row, 25);
 
             }
         },
@@ -185,21 +141,75 @@ var escapes = (function () {
             this.context.fillStyle = 'black';
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             this.reset();
+            return this;
+        },
+
+        trim: function () {
+            var height = (this.cursor.row + this.cursor.scrollback) * 16,
+                image_data = this.context.getImageData(0, 0, this.canvas.width, height);
+
+            this.canvas.height = height;
+            this.clear();
+            this.context.putImageData(image_data, 0, 0);
+            return this;
         },
 
         reset: function () {
             this.flags = NONE;
             this.color.reset();
             this.cursor.reset();
+            return this;
         },
 
-        init: function (id) {
-            if (!canvas_supported()) {
-                throw new Error('Browser does not support <canvas> element');
+// Draw a letterform on the buffer canvas using the specified foreground and
+// background colors and return its pixel data.
+
+        rasterize: function (charcode, foreground, background) {
+            var letterform, x, y, i, row, offset, color, pixel_array;
+
+            pixel_array = this.bitmap.data;
+            letterform = font[charcode];
+
+// Each letterform comprises sixteen bytes, with each byte representing a row
+// of eight pixels.
+
+            for (y = 0; y < 16; y++) {
+                row = letterform[y];
+
+// Individual bits are either filled in (1) or empty (0). To get a value for
+// each pixel, we shift bits to the right, one at a time.
+
+                for (x = 7; x >= 0; x--) {
+                    offset = (4 * x) + (32 * y);
+                    color = row & 1 ? foreground : background;
+
+// Each pixel is represented by four array elements, representing the intensity
+// of the red, green, blue, and alpha channels, respectively.
+
+                    for (i = 0; i < 4; i++) {
+                        pixel_array[offset + i] = color[i];
+                    }
+                    row >>= 1;
+                }
             }
-            this.canvas = document.getElementById(id);
-            this.context = this.canvas.getContext('2d');
-            this.clear();
+            return this.bitmap;
+        },
+
+        load: function (options) {
+            var instance = Object.create(this);
+
+            instance.canvas = document.createElement('canvas');
+            instance.canvas.width = 640;
+            instance.canvas.height = MAX_HEIGHT;
+            instance.context = instance.canvas.getContext('2d');
+            instance.bitmap = instance.context.createImageData(8, 16);
+
+            instance.reset();
+            instance.get(options.url, function (data) {
+                instance.parse(data, { success: options.success });
+            });
+
+            return instance;
         },
 
         escape: function (opcode, args) {
@@ -243,7 +253,6 @@ var escapes = (function () {
             case 'm':  // Set Graphics Rendition
                 for (i = 0, length = args.length; i < length; i++) {
                     arg = args[i];
-                    // this.color.reset();
                     if (arg === NONE) {
                         this.flags = NONE;
                         this.color.reset();
@@ -271,14 +280,21 @@ var escapes = (function () {
                 break;
 
             case 'K':  // Erase Line
-                // del cur cursor to end of line
+                (function (self) {
+                    var x, y;
+
+                    self.context.fillStyle = 'black';
+                    y = (self.cursor.row + self.cursor.scrollback - 1) * 16;
+                    x = (self.cursor.column - 1) * 8;
+                    self.context.fillRect(x, y, 8, 16);
+                }());
                 break;
             }
         },
 
-// Iteratively parse a string of ANSI data
+// Iteratively parse a string of into literal text fragments and ANSI escapes
 
-        parse: function (buffer) {
+        parse: function (buffer, options) {
             var re = /(?:\x1b\x5b)([=;0-9]*?)([ABCDHJKfhlmnpsu])/g,
                 pos = 0,
                 opcode,
@@ -310,12 +326,21 @@ var escapes = (function () {
             if (pos < buffer.length) {
                 this.write(buffer.slice(pos));
             }
+
+            this.trim();
+
+            if (typeof options.success === 'function') {
+                options.success(this.canvas);
+            }
+
+            return this;
         },
 
         write: function (text) {
             var CR = 0x0d,
                 LF = 0x0a,
                 cursor = this.cursor,
+                image_data,
                 background,
                 foreground,
                 charcode,
@@ -328,7 +353,7 @@ var escapes = (function () {
             background = get_color(this.color.background);
 
             for (i = 0, length = text.length; i < length; i++) {
-                charcode = text.charCodeAt(i);
+                charcode = text.charCodeAt(i) & 0xff;
                 switch (charcode) {
                 case CR:
                     cursor.column = 1;
@@ -340,9 +365,9 @@ var escapes = (function () {
 
                 default:
                     x = (cursor.column - 1) * 8;
-                    y = (cursor.row + cursor.scrolled - 1) * 16;
-                    rasterize(charcode, foreground, background);
-                    this.context.putImageData(rasterize(charcode, foreground, background), x, y);
+                    y = (cursor.row + cursor.scrollback - 1) * 16;
+                    image_data = this.rasterize(charcode, foreground, background);
+                    this.context.putImageData(image_data, x, y);
 
                     if (cursor.column === 80) {
                         cursor.column = 1;
@@ -353,22 +378,20 @@ var escapes = (function () {
                     break;
                 }
 
-                // (broken somehow)
-                // if (cursor.row > 25) {
-                //     cursor.scrolled = cursor.row - 25;
-                //     cursor.row = 25;
-                // }
+// The value of 'row' represents current position relative to the top of the
+// screen and therefore cannot exceed 25. Vertical scroll past the 25th line
+// increments the scrollback buffer instead.
+
+                if (cursor.row === 26) {
+                    cursor.scrollback++;
+                    cursor.row--;
+                }
             }
         },
 
-        load: function (url, charset, callback) {
+        get: function (url, callback) {
             var req = new window.XMLHttpRequest();
-
-            if (typeof callback === 'undefined') {
-                callback = charset;
-                charset = 'ibm437';
-            }
-            req.overrideMimeType('text/plain; charset=' + charset);
+            req.overrideMimeType('text/plain; charset=x-user-defined');
             req.onreadystatechange = function () {
                 var LOADED = 4,
                     OK = 200;
@@ -376,7 +399,7 @@ var escapes = (function () {
                     if (req.status === OK) {
                         callback(req.responseText);
                     } else {
-                        throw new Error('load(): request failed.');
+                        throw new Error('escapes.get(): request failed.', req);
                     }
                 }
             };
@@ -384,6 +407,11 @@ var escapes = (function () {
             req.send(null);
         }
     };
+
+// Dump of bitmap VGA font. Each glyph in the ASCII set is an element in the
+// array, indexed to its character code. Each 8px x 16px character is
+// represented by a sixteen-element sub-array, with each element representing
+// a row of pixels. 
 
     font = [
         [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
@@ -643,5 +671,6 @@ var escapes = (function () {
         [0x00, 0x00, 0x00, 0x00, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x00, 0x00, 0x00, 0x00, 0x00],
         [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
     ];
+    console.log(font[65]);
     return escapes;
 }());
