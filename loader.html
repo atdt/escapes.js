@@ -3,29 +3,32 @@
   <head>
     <meta charset=utf-8>
     <title>loader.html</title>
-    <link rel=stylesheet href=css/style.css>
+    <style>
+      figure { width: 100% };
+      canvas { margin: 20px auto; }
+      html, body { background-color: black; }
+    </style>
   <body>
     <!-- terminal -->
     <figure>
-      <canvas id="term" width="640" height="4800">
+      <canvas id="term" width="640" height="4000">
         Your browser does not support HTML5 Canvas.
       </canvas>
     </figure>
 
     <!-- scripts -->
-    <!-- <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script> -->
-    <script src=loader.js></script>
-    <script src=dosfont.js></script>
+    <script src=//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
+    <script src=escapes.js></script>
     <script>
-      console.log('partly loaded');
       document.addEventListener('DOMContentLoaded', function () {
-          console.log('dom loaded');
-          escapes.load('static/DEFCON9.ANS', function (data) {
-              console.log('ajax loaded');
-              escapes.init('term');
-              console.log('inited');
-              escapes.parse(data);
-              console.log('done');
-          });
+        escapes.load({
+          url: 'static/BC-DEEP4.ART',
+          success: function (data) {
+            console.log('trying..');
+            var canvas = $('#term').replaceWith(data);
+            /* context = canvas.getContext('2d'); */
+            /* context.drawImage(data, 0, 0); */
+          }
+        });
       });
     </script>
