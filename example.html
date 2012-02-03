@@ -2,25 +2,19 @@
 <html>
   <head>
     <meta charset=utf-8>
-    <title>loader.html</title>
+    <title>:: escapes.js ::</title>
     <style>
-      figure { width: 100% };
-      canvas { margin: 20px auto; }
-      html, body { background-color: white; }
+      body   { background: black; }
+      canvas { width: 100%;       }
     </style>
+
   <body>
-    <!-- terminal -->
-    <figure>
-      <canvas id="term" width="640" height="4000">
-        Your browser does not support HTML5 Canvas.
-      </canvas>
-    </figure>
 
     <!-- scripts -->
     <script src=//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
     <script src=escapes.js></script>
     <script>
-        Escapes.draw('static/BC-DEEP4.ART', function (data) {
-            var canvas = $('#term').replaceWith(data);
-        });
+      Escapes.draw('static/BC-DEEP4.ART', function () {
+        $(this).appendTo('body');
+      });
     </script>

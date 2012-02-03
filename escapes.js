@@ -25,7 +25,7 @@
 
 // greetz to deniz.
 
-(function (exports) {
+(function (global) {
     "use strict";
     var escapes,
 
@@ -62,11 +62,30 @@
 
         font;
 
+// Creates an appropriately-sized  <canvas> element, augmented with some useful
+// methods.
+
     function Canvas(width, height) {
         var canvas = document.createElement('canvas');
 
         canvas.width  = width  || 640;
         canvas.height = height || MAX_HEIGHT;
+
+        canvas.toDownloadURL = function () {
+            var url = canvas.toDataURL();
+            return 'image/octet-stream' + url.substring(14);
+        };
+
+        canvas.download = function () {
+            window.location.assign(this.toDownloadURL());
+        };
+
+        canvas.toImageTag = function () {
+            var image = document.createElement('img');
+            image.setAttribute('src', this.toDataURL());
+            image.setAttribute('alt', 'Rendered ANSI');
+            return image;
+        };
 
         return canvas;
     }
@@ -113,9 +132,9 @@
         return array;
     }
 
-    function Cursor() {
-        if (!(this instanceof Cursor)) {
-            return new Cursor();
+    function Escapes() {
+        if (!(this instanceof Escapes)) {
+            return new Escapes();
         }
 
         // Canvas
@@ -136,10 +155,10 @@
         return this;
     }
 
-    Cursor.prototype = {
+    Escapes.prototype = {
 
         draw: function (url, callback) {
-            var cursor = new Cursor();
+            var cursor = new Escapes();
 
             cursor.clearCanvas();
             binaryGet(url, function (data) {
@@ -274,7 +293,7 @@
 
             this.trimCanvas();
 
-            options.onComplete.call(this, this.canvas);
+            options.onComplete.call(this.canvas, this);
 
             return this;
         },
@@ -377,6 +396,10 @@
             background = getColor(this.background);
 
             for (i = 0, length = text.length; i < length; i++) {
+
+// Some XMLHttpRequest implementations insist on UTF-8 for everything, so we
+// discard high-order zero bits.
+
                 charcode = text.charCodeAt(i) & 0xff;
                 switch (charcode) {
                 case CR:
@@ -679,6 +702,6 @@
         [    ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ]
     ];
 
-    exports.Escapes = new Cursor();
+    global.Escapes = new Escapes();
 
 }(this));
