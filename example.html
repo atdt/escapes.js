@@ -20,15 +20,7 @@
     <script src=//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
     <script src=escapes.js></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        escapes.load({
-          url: 'static/BC-DEEP4.ART',
-          success: function (data) {
-            console.log('trying..');
+        Escapes.draw('static/BC-DEEP4.ART', function (data) {
             var canvas = $('#term').replaceWith(data);
-            /* context = canvas.getContext('2d'); */
-            /* context.drawImage(data, 0, 0); */
-          }
         });
-      });
     </script>
