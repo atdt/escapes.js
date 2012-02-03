@@ -141,6 +141,7 @@
         draw: function (url, callback) {
             var cursor = new Cursor();
 
+            cursor.clearCanvas();
             binaryGet(url, function (data) {
                 cursor.parse(data, {
                     onEscape    : cursor.escape,
