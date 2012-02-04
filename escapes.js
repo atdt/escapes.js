@@ -20,13 +20,9 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 
-/*jslint bitwise: true, browser: true, plusplus: true, unparam: true */
-/*globals escapes: true */
-
 // greetz to deniz.
 
 (function (global) {
-    "use strict";
     var escapes,
 
         BLACK   = 0,
@@ -45,31 +41,26 @@
         REVERSE   = 0x7,
         INVISIBLE = 0x9,
 
-// Colors expressed as RGBA arrays
-
         COLORS = [
-            [  0,   0,   0, 255],    // Black
-            [170,   0,   0, 255],    // Red
-            [  0, 170,   0, 255],    // Green
-            [170,  85,   0, 255],    // Yellow
-            [  0,   0, 170, 255],    // Blue
-            [170,   0, 170, 255],    // Magenta
-            [  0, 170, 170, 255],    // Cyan
-            [170, 170, 170, 255]     // White
+            [  0,   0,   0, 255],  // Black
+            [170,   0,   0, 255],  // Red
+            [  0, 170,   0, 255],  // Green
+            [170,  85,   0, 255],  // Yellow
+            [  0,   0, 170, 255],  // Blue
+            [170,   0, 170, 255],  // Magenta
+            [  0, 170, 170, 255],  // Cyan
+            [170, 170, 170, 255]   // White
         ],
 
-        MAX_HEIGHT = 4000,  // px.
+        MAX_HEIGHT = 4000,  // Or 250 lines at 16 px/line
 
         font;
 
-// Creates an appropriately-sized  <canvas> element, augmented with some useful
-// methods.
-
-    function Canvas(width, height) {
+    function Canvas() {
         var canvas = document.createElement('canvas');
 
-        canvas.width  = width  || 640;
-        canvas.height = height || MAX_HEIGHT;
+        canvas.width  = 640;
+        canvas.height = MAX_HEIGHT;
 
         canvas.toDownloadURL = function () {
             var url = canvas.toDataURL();
@@ -90,26 +81,24 @@
         return canvas;
     }
 
-    function getColor(code, bright) {
-        var rgba = COLORS[code];
-
-// The bright version of each color adds 85 to each color channel
-
-        if (bright) {
-            rgba = rgba.slice(0);
-            rgba[0] += 85;
-            rgba[1] += 85;
-            rgba[2] += 85;
-        }
+    function brightenRgba(rgba) {
+        rgba = rgba.slice(0);
+        rgba[0] += 85;
+        rgba[1] += 85;
+        rgba[2] += 85;
         return rgba;
     }
 
-    function binaryGet(url, success, error) {
-        var DONE = 4,
-            OK = 200,
-            req;
+    function getColor(code, bright) {
+        var rgba = COLORS[code];
+        return bright ? brightenRgba(rgba) : rgba;
+    }
 
-        req = new window.XMLHttpRequest();
+    function binaryGet(url, success, error) {
+        var req = new window.XMLHttpRequest(),
+            DONE = 4,
+            OK = 200;
+
         req.overrideMimeType('text/plain; charset=x-user-defined');
         req.onreadystatechange = function () {
             if (req.readyState === DONE) {
@@ -140,7 +129,7 @@
         // Canvas
         this.canvas  = new Canvas();
         this.context = this.canvas.getContext('2d');
-        this.bitmap  = this.context.createImageData(8, 16);
+        this.image_data  = this.context.createImageData(8, 16);
 
         // Position
         this.column     = 1;
@@ -176,9 +165,7 @@
             this.column += columns;
             this.row += rows;
 
-// If the requested movement pushed the cursor out of bounds, return cursor to
-// boundary.
-
+            // Enforce boundaries
             this.column = Math.max(this.column, 1);
             this.column = Math.min(this.column, 80);
             this.row = Math.max(this.row, 1);
@@ -187,26 +174,24 @@
 
         clearCanvas: function () {
             this.context.fillStyle = 'black';
-            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.fillRect(0, 0, 640, this.canvas.height);
             this.flags = NONE;
             this.resetColor();
         },
 
         trimCanvas: function () {
-            var height = (this.row + this.scrollback) * 16,
-                image_data = this.context.getImageData(0, 0, this.canvas.width, height);
+            var new_height = (this.row + this.scrollback) * 16,
+                image_data = this.context.getImageData(0, 0, 640, new_height);
 
-            this.canvas.height = height;
+            this.canvas.height = new_height;
             this.clearCanvas();
             this.context.putImageData(image_data, 0, 0);
         },
 
         savePosition: function () {
-            var self = this;
-            self.saved = {
-                column: self.column,
-                row: self.row
-            };
+            this.saved = {};
+            this.saved.row = this.row;
+            this.saved.column = this.column;
         },
 
         loadPosition: function () {
@@ -220,42 +205,25 @@
             this.background = BLACK;
         },
 
-// Draw a letterform on the buffer canvas using the specified foreground and
-// background colors and return its pixel data.
-
         renderChar: function (charcode, foreground, background) {
-            var letterform, x, y, i, row, offset, color, pixel_array;
+            var data, bitmap, bits, row, col, offset, color, channel;
 
-            pixel_array = this.bitmap.data;
-            letterform = font[charcode];
+            data   = this.image_data.data;
+            bitmap = font[charcode];
 
-// Each letterform comprises sixteen bytes, with each byte representing a row
-// of eight pixels.
-
-            for (y = 0; y < 16; y++) {
-                row = letterform[y] || 0x00;
-
-// Individual bits are either filled in (1) or empty (0). To get a value for
-// each pixel, we shift bits to the right, one at a time.
-
-                for (x = 7; x >= 0; x--) {
-                    offset = (4 * x) + (32 * y);
-                    color = row & 1 ? foreground : background;
-
-// Each pixel is represented by four array elements, representing the intensity
-// of the red, green, blue, and alpha channels, respectively.
-
-                    for (i = 0; i < 4; i++) {
-                        pixel_array[offset + i] = color[i];
+            for (row = 0; row < 16; row++) {
+                bits = bitmap[row] || 0x00;
+                for (col = 7; col >= 0; col--) {
+                    offset = (32 * row) + (4 * col);
+                    color = bits & 1 ? foreground : background;
+                    for (channel = 0; channel < 4; channel++) {
+                        data[offset + channel] = color[channel];
                     }
-                    row >>= 1;
+                    bits >>= 1;
                 }
             }
-            return this.bitmap;
+            return this.image_data;
         },
-
-
-// Iteratively parse a string of into literal text fragments and ANSI escapes
 
         parse: function (buffer, options) {
             var re = /(?:\x1b\x5b)([=;0-9]*?)([ABCDHJKfhlmnpsu])/g,
@@ -267,34 +235,22 @@
             do {
                 pos = re.lastIndex;
                 match = re.exec(buffer);
-
-// If we found a match, and if the match is further ahead than our current
-// position in the string, we can assume everything from the current position
-// to the start of the match is literal text.
-
                 if (match !== null) {
                     if (match.index > pos) {
-                        this.write(buffer.slice(pos, match.index));
+                        options.onLiteral.call(this, buffer.slice(pos, match.index));
                     }
-
-// Parse an escape sequence into a character opcode and an array of parameters
-
                     opcode = match[2];
                     args = parseIntArray(match[1].split(';'));
                     options.onEscape.call(this, opcode, args);
                 }
             } while (re.lastIndex !== 0);
 
-// Output the tail of the buffer (whatever follows the last escape sequence)
-
             if (pos < buffer.length) {
                 options.onLiteral.call(this, buffer.slice(pos));
             }
 
             this.trimCanvas();
-
             options.onComplete.call(this.canvas, this);
-
             return this;
         },
 
@@ -396,11 +352,7 @@
             background = getColor(this.background);
 
             for (i = 0, length = text.length; i < length; i++) {
-
-// Some XMLHttpRequest implementations insist on UTF-8 for everything, so we
-// discard high-order zero bits.
-
-                charcode = text.charCodeAt(i) & 0xff;
+                charcode = text.charCodeAt(i) & 0xff;  // truncate to 8 bits
                 switch (charcode) {
                 case CR:
                     cursor.column = 1;
@@ -438,10 +390,10 @@
 
     };
 
-// Dump of bitmap VGA font. Each glyph in the ASCII set is an element in the
-// array, indexed to its character code. Each 8px x 16px character is
-// represented by a sixteen-element sub-array, with each element representing
-// a row of pixels.
+// image_data VGA font. Each element in the array is a glyph in the ASCII character
+// set, indexed by its character code. Each 8px x 16px character is represented
+// by a sixteen-element sub-array, with each element representing a row of
+// pixels.
 
     font = [
         [    ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ],
@@ -701,7 +653,5 @@
         [    ,     ,     ,     , 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e,     ,     ,     ,     ,     ],
         [    ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ]
     ];
-
     global.Escapes = new Escapes();
-
 }(this));
