@@ -54,7 +54,24 @@
 
         MAX_HEIGHT = 4000,  // Or 250 lines at 16 px/line
 
-        font;
+        font,
+
+        jQuery = global.jQuery;
+
+
+    function jQueryPluginSetup() {
+        $.ansi = function (url, callback) {
+            var deferred = jQuery.Deferred();
+
+            if (typeof callback !== 'undefined') {
+                deferred.then(callback);
+            }
+            escapes(url, function (cursor) {
+                deferred.resolveWith(this, cursor);
+            });
+            return deferred.promise();
+        }
+    }
 
     function Canvas() {
         var canvas = document.createElement('canvas');
@@ -121,9 +138,9 @@
         return array;
     }
 
-    function Escapes() {
-        if (!(this instanceof Escapes)) {
-            return new Escapes();
+    function Cursor() {
+        if (!(this instanceof Cursor)) {
+            return new Cursor();
         }
 
         // Canvas
@@ -141,25 +158,11 @@
         this.background = BLACK;
         this.flags      = 0x0;
 
+        this.clearCanvas();
         return this;
     }
 
-    Escapes.prototype = {
-
-        draw: function (url, callback) {
-            var cursor = new Escapes();
-
-            cursor.clearCanvas();
-            binaryGet(url, function (data) {
-                cursor.parse(data, {
-                    onEscape    : cursor.escape,
-                    onLiteral   : cursor.write,
-                    onComplete  : callback
-                });
-            });
-
-            return cursor;
-        },
+    Cursor.prototype = {
 
         moveCursorBy: function (columns, rows) {
             this.column += columns;
@@ -389,6 +392,24 @@
         },
 
     };
+
+    escapes = function (url, callback) {
+        var cursor = new Cursor();
+        cursor.clearCanvas();
+        binaryGet(url, function (data) {
+            cursor.parse(data, {
+                onEscape    : cursor.escape,
+                onLiteral   : cursor.write,
+                onComplete  : callback
+            });
+        });
+        return cursor;
+    };
+
+    escapes.Cursor = Cursor;
+    global.escapes = escapes;
+    jQuery.Deferred && jQueryPluginSetup();
+
 
 // image_data VGA font. Each element in the array is a glyph in the ASCII character
 // set, indexed by its character code. Each 8px x 16px character is represented
@@ -653,5 +674,5 @@
         [    ,     ,     ,     , 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e, 0x7e,     ,     ,     ,     ,     ],
         [    ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ,     ]
     ];
-    global.Escapes = new Escapes();
+
 }(this));
