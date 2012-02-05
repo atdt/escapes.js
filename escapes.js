@@ -240,7 +240,6 @@
                 pos = re.lastIndex;
                 match = re.exec(buffer);
                 if (match !== null) {
-                    console.log('match, index: ', match.index, pos);
                     if (match.index > pos) {
                         options.onLiteral.call(this, buffer.slice(pos, match.index));
                     }
