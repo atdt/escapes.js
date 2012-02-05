@@ -23,6 +23,7 @@
 // greetz to deniz.
 
 (function (global) {
+    "use strict";
     var escapes,
 
         BLACK   = 0,
@@ -70,7 +71,7 @@
                 deferred.resolveWith(this, cursor);
             });
             return deferred.promise();
-        }
+        };
     }
 
     function Canvas() {
@@ -229,7 +230,7 @@
         },
 
         parse: function (buffer, options) {
-            var re = /(?:\x1b\x5b)([=;0-9]*?)([ABCDHJKfhlmnpsu])/g,
+            var re = /(?:\x1b\x5b)([\?=;0-9]*?)([ABCDHJKfhlmnpsu])/g,
                 pos = 0,
                 opcode,
                 args,
@@ -239,6 +240,7 @@
                 pos = re.lastIndex;
                 match = re.exec(buffer);
                 if (match !== null) {
+                    console.log('match, index: ', match.index, pos);
                     if (match.index > pos) {
                         options.onLiteral.call(this, buffer.slice(pos, match.index));
                     }
@@ -305,7 +307,6 @@
                         switch (Math.floor(arg / 10)) {
                         case 0:
                             this.flags |= arg;
-                            this.resetColor();
                             break;
                         case 3:
                             this.foreground = arg - 30;
@@ -389,7 +390,7 @@
                     cursor.row--;
                 }
             }
-        },
+        }
 
     };
 
@@ -408,7 +409,9 @@
 
     escapes.Cursor = Cursor;
     global.escapes = escapes;
-    jQuery.Deferred && jQueryPluginSetup();
+    if (jQuery.Deferred) {
+        jQueryPluginSetup();
+    }
 
 
 // image_data VGA font. Each element in the array is a glyph in the ASCII character
