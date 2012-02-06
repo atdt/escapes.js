@@ -239,6 +239,11 @@
                 args,
                 match;
 
+// DOS treats Ctrl-Z (SUB) as EOF. Some ANSI artists hid their alias in a file
+// by placing it after the EOF.
+
+            buffer = buffer.split(String.fromCharCode(0x1a), 1)[0];
+
             do {
                 pos = re.lastIndex;
                 match = re.exec(buffer);
