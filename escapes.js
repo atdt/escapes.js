@@ -60,6 +60,10 @@
         jQuery = global.jQuery;
 
 
+    function isDeferred(obj) {
+        return (typeof obj.done === 'function');
+    }
+
     function jQueryPluginSetup() {
         $.ansi = function (url, callback) {
             var deferred = jQuery.Deferred();
@@ -393,16 +397,31 @@
 
     };
 
-    escapes = function (url, callback) {
-        var cursor = new Cursor();
-        cursor.clearCanvas();
-        binaryGet(url, function (data) {
+
+    escapes = function (target, callback) {
+        var cursor = new Cursor(),
+            options = {
+                onEscape    : cursor.escape,
+                onLiteral   : cursor.write,
+                onComplete  : callback
+            };
+
+        function onAjaxSuccess(data) {
             cursor.parse(data, {
                 onEscape    : cursor.escape,
                 onLiteral   : cursor.write,
                 onComplete  : callback
             });
-        });
+        }
+
+        cursor.clearCanvas();
+
+        if (isDeferred(target)) {
+            target.done(onAjaxSuccess);
+        } else {
+            binaryGet(target, onAjaxSuccess);
+        }
+
         return cursor;
     };
 
