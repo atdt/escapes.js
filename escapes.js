@@ -65,13 +65,13 @@
     }
 
     function jQueryPluginSetup() {
-        $.ansi = function (url, callback) {
+        $.ansi = function (target, callback) {
             var deferred = jQuery.Deferred();
 
             if (typeof callback !== 'undefined') {
                 deferred.then(callback);
             }
-            escapes(url, function (cursor) {
+            escapes(target, function (cursor) {
                 deferred.resolveWith(this, cursor);
             });
             return deferred.promise();
@@ -90,14 +90,13 @@
         };
 
         canvas.download = function () {
-            window.location.assign(this.toDownloadURL());
+            window.location = this.toDownloadURL();
         };
 
         canvas.toImageTag = function () {
-            var image = document.createElement('img');
-            image.setAttribute('src', this.toDataURL());
-            image.setAttribute('alt', 'Rendered ANSI');
-            return image;
+            var img = document.createElement('img');
+            img.src = this.toDataURL();
+            return img;
         };
 
         return canvas;
