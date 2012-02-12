@@ -4,23 +4,44 @@
     <meta charset=utf-8>
     <title>:: escapes.js ::</title>
     <style>
-      body   {
-        background: black;
+      @import url(http://fonts.googleapis.com/css?family=PT+Sans);
+
+      * {
         margin: 0;
-        width: 100%;
+        padding: 0;
       }
-      .contents {
-        width: 570px;
-        margin: 0 auto;
-        background-color: #555;
-        height: 400px;
+
+      body {
+        background: #000;
+        font: 16px/21px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: url(static/bg2.png) repeat-x left top fixed rgba(0, 0, 0, 0.2);
+        color: #ccc;
       }
-      canvas {
+
+      h1, h2, h3 {
+        color: #f50f16;
+        padding: 0.6em 0;
+      }
+
+      .container {
+        box-sizing: border-box;
+        /* background: rgba(0, 0, 0, 0.6); */
+        background: #222;
+        width: 720px;
+        padding: 0 40px;
+        /* margin: 0 auto; */
+        position: absolute;
+        top: 0;
+        left: 140px;
+      }
+
+      canvas:first-child {
         /* http://goo.gl/vwyQN */
         /* width: 1280px; */
+        height: 400px;
+        width: 640px;
         display: block;
         margin: 0 auto;
-        transition: opacity 0.5s linear;
         image-rendering:optimizeSpeed;             /* Legal fallback                 */
         image-rendering:-moz-crisp-edges;          /* Firefox                        */
         image-rendering:-o-crisp-edges;            /* Opera                          */
@@ -37,22 +58,61 @@
         z-index: 999;
       }
 
-      img.visible {
-        visibility: visible;
-        opacity: 1;
-        transition: opacity 2s linear;
-      }
     </style>
 
   <body>
     <a href=http://github.com/atdt/escapes.js/><img class=github src=https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67 alt="Fork me on GitHub"></a>
+    <div class=container>
+    <img class=art src=static/blnd-art.png alt='ansi art logo'>
+      <h1>escapes</h1>
+      <p><b>escapes.js</b> is a small JavaScript library for rendering ANSI
+      art in the browser. It has a simple API, designed to encourage
+      experimentation. It has no dependencies, but it works well with
+      jQuery.</p>
+
+      <pre>
+        escapes('static/TT-SOH.ICE', function () {
+          $(this).appendTo('body');
+        });
+      </pre>
+
+      <p><button>Try it!</button></p>
+
+      <h1>usage</h1>
+      <pre>escapes( <i>url</i>, <i>callback</i> )</pre>
+
+      <p>Within the callback, the keyword <code>this</code> refers to
+      a <code>&lt;canvas&gt;</code> element on which the ANSI was painted. The
+      canvas object (<em>not</em> the prototype!) is augmented with two
+      additional methods:</p>
+
+      <dl>
+        <dt><code>canvas.toImageTag()</code>
+        <dd>returns an &lt;img&gt; element of the rendered ANSI.
+        <dt><code>canvas.toDownloadURL()</code>
+        <dd>returns a URL for downloading (saving) the image.
+      </dl>
+
+      <p>If you're using jQuery, you can also invoke escapes as a jQuery
+      plugin:
+      <pre>$.ansiRender( <i>url</i>, [<i>callback</i>] )</pre>
+      <p>This returns a <code>jQuery.Deferred</code> object.</p>
+
+
+
+
+
+    </div>
 
     <!-- scripts -->
     <script src=//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
     <script src=escapes.js></script>
     <script>
-      var file = 'BLND-ART.ANS';
-      escapes('static/' + file, function () {
-        $(this).hide().appendTo('body').fadeIn(2000);
+      var files = ["agt77-01.drk", "ANSI0796.ANS", "AR-PRLX2.ANS", "asoap-07.drk", "BC-DEEP4.ART", "BLND-ART.ANS", "corin-01.drk", "corin-04.drk", "corin-07.drk", "ESCAPES.ANS", "KS-IC1.ANS", "KY-LOGO3.ANS", "LOGO0495.ANS", "multi-03.drk", "multi-05.drk", "multi-08.drk", "multi-10.drk", "scrup-0b.drk", "sgi-03.drk", "shnya-01.drk", "SQ-LGOS3.ICE", "tghrn-08.drk", "TT-SOH.ICE"];
+      /* files = []; */
+      files.forEach(function (file) {
+        escapes('static/' + file, function () {
+          $(this.toImageTag()).appendTo('.container');
+        });
       });
     </script>
