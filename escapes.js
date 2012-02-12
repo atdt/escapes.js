@@ -66,7 +66,7 @@
             [255, 255, 255, 255]
         ],
 
-        MAX_HEIGHT = 8000,  // Or 500 lines at 16 px/line
+        MAX_HEIGHT = 12000,  // Or 750 lines at 16 px/line
 
         font,
 
@@ -398,6 +398,7 @@
     escapes = function (url, callback, options) {
         var property, cursor = new Cursor();
 
+        options = options || {};
         for (property in options) {
             cursor[property] = options[property];
         }
