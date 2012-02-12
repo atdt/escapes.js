@@ -4,18 +4,55 @@
     <meta charset=utf-8>
     <title>:: escapes.js ::</title>
     <style>
-      body   { background: black; }
-      canvas { width: 100%;       }
+      body   {
+        background: black;
+        margin: 0;
+        width: 100%;
+      }
+      .contents {
+        width: 570px;
+        margin: 0 auto;
+        background-color: #555;
+        height: 400px;
+      }
+      canvas {
+        /* http://goo.gl/vwyQN */
+        /* width: 1280px; */
+        display: block;
+        margin: 0 auto;
+        transition: opacity 0.5s linear;
+        image-rendering:optimizeSpeed;             /* Legal fallback                 */
+        image-rendering:-moz-crisp-edges;          /* Firefox                        */
+        image-rendering:-o-crisp-edges;            /* Opera                          */
+        image-rendering:-webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+        image-rendering:optimize-contrast;         /* CSS3 Proposed                  */
+        -ms-interpolation-mode:nearest-neighbor;   /* IE8+                           */
+      }
+
+      .github {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 0;
+        z-index: 999;
+      }
+
+      img.visible {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 2s linear;
+      }
     </style>
 
   <body>
+    <a href=http://github.com/atdt/escapes.js/><img class=github src=https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67 alt="Fork me on GitHub"></a>
 
     <!-- scripts -->
     <script src=//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
     <script src=escapes.js></script>
     <script>
-      escapes('static/ESCAPES.ANS', function () {
-      /* escapes('static/AR-STRM1.ANS', function () { */
-        $(this.toImageTag()).appendTo('body');
+      var file = 'BLND-ART.ANS';
+      escapes('static/' + file, function () {
+        $(this).hide().appendTo('body').fadeIn(2000);
       });
     </script>
