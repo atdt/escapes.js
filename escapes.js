@@ -22,6 +22,8 @@
 
 // greetz to deniz.
 
+/*jslint forin: true, bitwise: true, browser: true, plusplus: true, regexp: true */
+
 (function (global) {
     "use strict";
     var escapes,
@@ -50,10 +52,21 @@
             [  0,   0, 170, 255],  // Blue
             [170,   0, 170, 255],  // Magenta
             [  0, 170, 170, 255],  // Cyan
-            [170, 170, 170, 255]   // White
+            [170, 170, 170, 255],  // White
+
+            // Bright:
+
+            [ 85,  85,  85, 255],
+            [255,  85,  85, 255],
+            [ 85, 255,  85, 255],
+            [255, 170,  85, 255],
+            [ 85,  85, 255, 255],
+            [255,  85, 255, 255],
+            [ 85, 255, 255, 255],
+            [255, 255, 255, 255]
         ],
 
-        MAX_HEIGHT = 20000,
+        MAX_HEIGHT = 8000,  // Or 500 lines at 16 px/line
 
         font,
 
@@ -65,7 +78,7 @@
     }
 
     function jQueryPluginSetup() {
-        $.ansiRender = function (target, callback) {
+        jQuery.ansiRender = function (target, callback) {
             var deferred = jQuery.Deferred();
 
             if (typeof callback !== 'undefined') {
@@ -89,10 +102,6 @@
             return 'image/octet-stream' + url.substring(14);
         };
 
-        canvas.download = function () {
-            window.location = this.toDownloadURL();
-        };
-
         canvas.toImageTag = function () {
             var img = document.createElement('img');
             img.src = this.toDataURL();
@@ -102,21 +111,8 @@
         return canvas;
     }
 
-    function brightenRgba(rgba) {
-        rgba = rgba.slice(0);
-        rgba[0] += 85;
-        rgba[1] += 85;
-        rgba[2] += 85;
-        return rgba;
-    }
-
-    function getColor(code, bright) {
-        var rgba = COLORS[code];
-        return bright ? brightenRgba(rgba) : rgba;
-    }
-
     function binaryGet(url, success, error) {
-        var req = new window.XMLHttpRequest(),
+        var req = new XMLHttpRequest(),
             DONE = 4,
             OK = 200;
 
@@ -142,7 +138,11 @@
         return array;
     }
 
-    function Cursor() {
+    function stupidCopy(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
+    function Cursor(options) {
         if (!(this instanceof Cursor)) {
             return new Cursor();
         }
@@ -158,11 +158,11 @@
         this.scrollback = 0;
 
         // Graphic mode
+        this.palette = stupidCopy(COLORS);
         this.foreground = WHITE;
         this.background = BLACK;
         this.flags      = 0x0;
 
-        this.clearCanvas();
         return this;
     }
 
@@ -180,7 +180,7 @@
         },
 
         clearCanvas: function () {
-            this.context.fillStyle = 'black';
+            this.context.fillStyle = 'rgba(' + this.getColor(BLACK).toString() + ')';
             this.context.fillRect(0, 0, 640, this.canvas.height);
             this.flags = NONE;
             this.resetColor();
@@ -205,6 +205,10 @@
             this.column = this.saved.column;
             this.row = this.saved.row;
             delete this.saved;
+        },
+
+        getColor: function (code, bright) {
+            return this.palette[bright ? code + 8 : code];
         },
 
         resetColor: function () {
@@ -332,17 +336,6 @@
                     this.resetColor();
                 }
                 break;
-
-            case 'K':  // Erase Line
-                (function (self) {
-                    var x, y;
-
-                    self.context.fillStyle = 'black';
-                    y = (self.cursor.row + self.cursor.scrollback - 1) * 16;
-                    x = (self.cursor.column - 1) * 8;
-                    self.context.fillRect(x, y, 8, 16);
-                }());
-                break;
             }
         },
 
@@ -359,8 +352,8 @@
                 i,
                 length;
 
-            foreground = getColor(this.foreground, this.flags & BRIGHT);
-            background = getColor(this.background);
+            foreground = this.getColor(this.foreground, this.flags & BRIGHT);
+            background = this.getColor(this.background);
 
             for (i = 0, length = text.length; i < length; i++) {
                 charcode = text.charCodeAt(i) & 0xff;  // truncate to 8 bits
@@ -402,30 +395,26 @@
     };
 
 
-    escapes = function (target, callback) {
-        var cursor = new Cursor(),
-            options = {
-                onEscape    : cursor.escape,
-                onLiteral   : cursor.write,
-                onComplete  : callback
-            };
+    escapes = function (url, callback, options) {
+        var property, cursor = new Cursor();
 
-        function onAjaxSuccess(data) {
+        for (property in options) {
+            cursor[property] = options[property];
+        }
+
+        if (options.transparent) {
+            cursor.palette[BLACK][3] = 0;
+        }
+
+        binaryGet(url, function (data) {
             cursor.parse(data, {
                 onEscape    : cursor.escape,
                 onLiteral   : cursor.write,
                 onComplete  : callback
             });
-        }
+        });
 
         cursor.clearCanvas();
-
-        if (isDeferred(target)) {
-            target.done(onAjaxSuccess);
-        } else {
-            binaryGet(target, onAjaxSuccess);
-        }
-
         return cursor;
     };
 
