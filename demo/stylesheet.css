@@ -1,0 +1,70 @@
+/* reset */
+html { height: 100%; }
+*    { margin: 0; padding: 0; }
+ul   { list-style-type: none; }
+a, a:link, a:active, a:visited { text-decoration: none; }
+
+/* type */
+@import url(http://fonts.googleapis.com/css?family=PT+Sans);
+body    { font-family: 'PT Sans', sans-serif; text-rendering: optimizeLegibility; }
+.mono   { font: 300 16px 'Bitstream Vera Sans Mono', 'Courier', monospace; }
+
+/* syntax highlighting */
+pre code           { white-space-collapse: trim-inner; }
+.params            { color: #7c7c7c; }
+.function .keyword { color: #ffffb6; }
+.string            { color: #a8ff60; }
+.keyword           { color: #96cbfe; }
+
+.tryit { float: right; }
+.art   { padding: 0 0 20px; }
+.descr { padding-bottom: 0.6em; font-size: 21px; }
+
+h1 { font-size: 59px; line-height: 70px; }
+b  { font-weight: 500; color: #ffffb6 }
+
+
+body {
+  background: black;
+  background: url(assets/background.png) repeat-x left top fixed rgba(0, 0, 0, 0.4);
+  color: #ccc;
+}
+
+.container pre, .ansi {
+  background: black;
+  padding: 20px;
+  margin: 20px -20px;
+}
+
+.credits {
+  font-size: 12px;
+  position: fixed;
+  width: 140px;
+  top: 220px;
+  left: 880px;
+  color: black;
+}
+
+.container {
+  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 140px;
+  width: 640px;
+  padding: 0 40px;
+  background: black;
+  background: rgba(0, 0, 0, 0.83);
+  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+canvas {
+  image-rendering: optimizeSpeed;               /* fallback                       */
+  image-rendering: -moz-crisp-edges;            /* firefox                        */
+  image-rendering:   -o-crisp-edges;            /* opera                          */
+  image-rendering: -webkit-optimize-contrast;   /* chrome (and eventually safari) */
+  image-rendering:         optimize-contrast;   /* css3 proposed                  */
+  -ms-interpolation-mode: nearest-neighbor;     /* ie8+                           */
+}
+
