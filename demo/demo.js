@@ -22,7 +22,7 @@ $(function () {
     }
 
     $(window).on('scroll', function() {
-        if (!(cooldown) && getScrollRemaining() < 200) {
+        if (!(cooldown) && getScrollRemaining() < 400) {
             cooldown = true;
             $doc.trigger('bottomed');
             window.setTimeout(function () {
@@ -43,7 +43,7 @@ $(function () {
         if (files.length) {
             job = $.ansiRender('ansis/' + files.pop() + '.ans');
             job.done(function () {
-                $(this.toImageTag()).addClass('ansi').appendTo('.container');
+                $(this.toImageTag()).hide().addClass('ansi').appendTo('.container').fadeIn('slow');
             });
         }
     });

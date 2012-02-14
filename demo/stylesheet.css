@@ -51,7 +51,7 @@ body {
   top: 0;
   left: 140px;
   width: 640px;
-  padding: 0 40px;
+  padding: 0 40px 500px;
   background: black;
   background: rgba(0, 0, 0, 0.83);
   -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
