@@ -1,0 +1,38 @@
+
+                                                 _)
+   _ \   __|   __|   _` |  __ \    _ \   __|     |   __|
+   __/ \__ \  (     (   |  |   |   __/ \__ \     | \__ \
+ \___| ____/ \___| \__,_|  .__/  \___| ____/ _)  | ____/
+                          _|                 ___/
+
+
+  escapes.js is a small JavaScript / Canvas library for rendering ANSI art. It
+  has no dependencies, but it integrates nicely with jQuery.
+
+  Demo: http://atdt.github.com/escapes.js/
+
+  Example:
+
+      escapes('path/to/file.ans', function () {
+          $(this).appendTo('body');
+      });
+
+  Within the callback, the value of "this" is set to a canvas element
+  containing the rendered ANSI. The element is augmented with a couple of
+  useful methods:
+
+    this.toImageTag()
+
+        Creates an image tag with a PNG of the ANSI.
+
+    this.toDownloadURL()
+
+        Returns a string URL containing the rendered ANSI as a base64-encoded
+        PNG file, with a MIME-type of image/octet-stream. with a MIME type of
+        "image/octet-stream". If you set this URL as the href attribute of a
+        link tag, clicking on it will open a "Save File..." dialog.
+
+  escapes() takes an options object as an optional third parameter. You can
+  use it to make the background transparent by passing in {transparent: true}.
+
+  For lots & lots of beautiful ANSI art, check out http://sixteencolors.net/
