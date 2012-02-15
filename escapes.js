@@ -6,8 +6,9 @@
 //                            _|                 ___/
 //
 
-//  escapes.js
-//  http://github.com/atdt/escapes.js
+//  escapes.js, version 0.1
+//  http://atdt.github.com/escapes.js/
+//
 //  Copyright (C) 2012 Ori Livneh
 //
 //  This program is free software; you can redistribute it and/or

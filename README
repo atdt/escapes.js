@@ -13,9 +13,11 @@
 
   Example:
 
+
       escapes('path/to/file.ans', function () {
           $(this).appendTo('body');
       });
+
 
   Within the callback, the value of "this" is set to a canvas element
   containing the rendered ANSI. The element is augmented with a couple of
