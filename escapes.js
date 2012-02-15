@@ -121,7 +121,7 @@
             if (req.readyState === DONE) {
                 if (req.status === OK) {
                     success(req.responseText);
-                } else if (typeof error !== undefined) {
+                } else if (typeof error !== 'undefined') {
                     error(req);
                 }
             }
