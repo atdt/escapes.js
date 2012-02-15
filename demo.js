@@ -37,7 +37,7 @@ $(function () {
 
 $(function () {
     var job = $.Deferred().resolve(),
-        demo_ansi = $.ansiRender('/ansis/shnya-01.ans'),
+        demo_ansi = $.ansiRender('ansis/shnya-01.ans'),
         loading = new CanvasLoader('loader');
         files = $.shuffle([
             'agt77-01',  'ans-50a',   'ans-50c',   'ansi0796',  'ar-prlx2',
