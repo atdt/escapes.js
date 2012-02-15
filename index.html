@@ -1,88 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset='utf-8'>
 
-  <title>atdt/escapes.js @ GitHub</title>
+  <head>
+    <meta charset=utf-8>
+    <title>Escapes.js</title>
+    <link rel=stylesheet href=stylesheet.css>
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #da41ce;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #25be31; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #25be31; }
-    h3 { text-align: center; color: #25be31; }
-    a { color: #25be31; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
+  <body>
+    <div class=container>
+      <img class=art src=assets/blnd-art.png alt='ANSI art'>
+      <p><b>escapes.js</b> is a small JavaScript library for rendering ANSI
+      art, a form of computer art that flourished in the mid 90s. ANSI art was
+      composed by colorizing sequences of characters and blocks drawn in the
+      built-in system font, which made it easy to transmit across telephone
+      wires. As a result, ANSI art was especially popular on Bulletin Board
+      Systems (BBSes).</p>
 
-<body>
-  <a href="https://github.com/atdt/escapes.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+      <p>This library was designed to be simple and fun to hack on. It has no
+      hard dependencies, but it integrates neatly with jQuery. The source code
+      and documentation are available on <a href=https://github.com/atdt/escapes.js>GitHub</a>.</p>
 
-  <div id="container">
+      <pre><code class=mono>escapes(<span class=string>'static/TT-SOH.ICE'</span>, <span class=function><span class=keyword>function</span> <span class=params>()</span> {</span>
+  $(<span class=keyword>this</span>).appendTo(<span class=string>'body'</span>);
+});</code><button class="tryit button orange" type=button>Try it!</button></pre>
+      <div id=loader></div>
 
-    <div class="download">
-      <a href="https://github.com/atdt/escapes.js/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/atdt/escapes.js/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
     </div>
 
-    <h1><a href="https://github.com/atdt/escapes.js">escapes.js</a>
-      <span class="small">by <a href="https://github.com/atdt">atdt</a></span></h1>
+    <div class="credits mono">
+      <!-- github watch button -->
+      <iframe src=//markdotto.github.com/github-buttons/github-btn.html?user=kennethreitz&repo=requests&type=watch&count=true&size=largeallowtransparency=true frameborder=0 scrolling=0 width=170px height=30px></iframe>
 
-    <div class="description">
-      ANSI art
+      <!-- links -->
+      <p>Credit for all artwork on this page belongs to the artists.</p>
+      <p>For more ANSI art, check out <a href=http://sixteencolors.net>Sixteen Colors.</a></p>
+      <p>Feedback?</p>
+      <p><a href=http://twitter.com/scatterblot>@scatterblot</a></p>
+      <p><a href=mailto:ori.livneh@gmail.com>ori.livneh@gmail.com</a></p>
     </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-      <h2>Authors</h2>
-      <p>Ori Livneh (ori.livneh@gmail.com)<br/>      </p>
-    
-
-    
-      <h2>Contact</h2>
-      <p>Ori Livneh (ori.livneh@gmail.com)<br/>      </p>
-    
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/atdt/escapes.js/zipball/master">zip</a> or
-      <a href="https://github.com/atdt/escapes.js/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/atdt/escapes.js</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/atdt/escapes.js">atdt/escapes.js</a>
-    </div>
-
-  </div>
-
-</body>
-</html>
+    <a href=http://github.com/you>
+      <img class=github src=https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67 alt="Fork me on GitHub">
+    </a>
+    <!-- scripts -->
+    <script src=//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js></script>
+    <script src=//heartcode-canvasloader.googlecode.com/files/heartcode-canvasloader-min-0.9.1.js></script>
+    <script src=escapes.min.js></script>
+    <script src=demo.js></script>
+    <!-- <|script src=demo.js></script> -->

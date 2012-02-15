@@ -1,0 +1,5 @@
+#!/usr/bin/local/bash
+shopt -s globstar
+for file in ./**/*.ice; do
+  mv "$file" "${file%.ice}.ans"
+done

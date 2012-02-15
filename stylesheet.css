@@ -1,0 +1,134 @@
+/* reset */
+html { height: 100%; }
+*    { margin: 0; padding: 0; }
+ul   { list-style-type: none; }
+
+a, a:link, a:active, a:visited, a:hover {
+  text-decoration: none;
+  font-weight: 600;
+  color: #005580;
+}
+
+#loader { text-align: center; }
+
+
+/* type */
+@import url(http://fonts.googleapis.com/css?family=PT+Sans);
+body    { font: 16px/25px 'PT Sans', sans-serif; text-rendering: optimizeLegibility; }
+.mono   { font: 300 16px 'Bitstream Vera Sans Mono', 'Courier', monospace; }
+
+/* syntax highlighting */
+pre code           { white-space-collapse: trim-inner; }
+.params            { color: #7c7c7c; }
+.function .keyword { color: #ffffb6; }
+.string            { color: #a8ff60; }
+.keyword           { color: #96cbfe; }
+
+.tryit { float: right; }
+.art   { padding: 0 0 20px; }
+.descr { padding-bottom: 0.6em; font-size: 21px; }
+
+h1 { font-size: 59px; line-height: 70px; }
+
+b,
+.container a,
+.container a:link,
+.container a:active,
+.container a:visited {
+  color: #ffffb6;
+  font-weight: 600;
+}
+
+body {
+  background: black;
+  background: url(assets/background.png) repeat-x left top fixed rgba(0, 0, 0, 0.4);
+  color: #ccc;
+}
+
+.container pre, .ansi {
+  background: black;
+  padding: 20px;
+  margin: 20px -20px;
+}
+
+.github {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+}
+
+.credits {
+  font-size: 12px;
+  position: fixed;
+  width: 160px;
+  top: 220px;
+  left: 880px;
+  color: black;
+}
+
+.container {
+  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 140px;
+  width: 640px;
+  padding: 0 40px 500px;
+  background: black;
+  background: rgba(0, 0, 0, 0.83);
+  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+p {
+  margin: 0 0 9px;
+}
+
+canvas {
+  image-rendering: optimizeSpeed;               /* fallback                       */
+  image-rendering: -moz-crisp-edges;            /* firefox                        */
+  image-rendering:   -o-crisp-edges;            /* opera                          */
+  image-rendering: -webkit-optimize-contrast;   /* chrome (and eventually safari) */
+  image-rendering:         optimize-contrast;   /* css3 proposed                  */
+  -ms-interpolation-mode: nearest-neighbor;     /* ie8+                           */
+}
+
+/* button via http://www.lab.tommasoraspo.com/simple-web-buttoms/index.html# */
+.button{
+  display: inline-block;
+  text-decoration: none;
+  font: bold 12px/12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 8px 11px;
+  color: #555;
+  border: 1px solid #dedede;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.button.orange{
+  background: #fecc5f;
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#feda71', endColorstr='#febb4a'); /*  IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#feda71), to(#febb4a)); /*  WebKit */
+  background: -moz-linear-gradient(top,  #feda71, #febb4a);
+  border-color: #f5b74e #e5a73e #d6982f;
+  color: #996633;
+  text-shadow: 0 1px 0 #fedd9b;
+  -webkit-box-shadow: 0 1px 1px #d3d3d3, inset 0 1px 0 #fee395;
+     -moz-box-shadow: 0 1px 1px #d3d3d3, inset 0 1px 0 #fee395;
+          box-shadow: 0 1px 1px #d3d3d3, inset 0 1px 0 #fee395;
+}
+
+.button.orange:hover, .button.orange.selected{
+  background: #fecb5e;
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#fec354', endColorstr='#fecd61'); /*  IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#fec354), to(#fecd61)); /*  WebKit */
+  background: -moz-linear-gradient(top,  #fec354, #fecd61);
+  border-color: #d29a3a #cc9436 #c89133;
+  text-shadow: 0 1px 0 #fee1a0;
+  -webkit-box-shadow: 0 1px 1px #d4d4d4, inset 0 1px 0 #fed17e;
+     -moz-box-shadow: 0 1px 1px #d4d4d4, inset 0 1px 0 #fed17e;
+          box-shadow: 0 1px 1px #d4d4d4, inset 0 1px 0 #fed17e;
+}
+
