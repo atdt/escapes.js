@@ -5,21 +5,12 @@
 //   \___| ____/ \___| \__,_|  .__/  \___| ____/ _)  | ____/
 //                            _|                 ___/
 //
-
 //  escapes.js, version 0.1
 //  http://atdt.github.com/escapes.js/
 //
 //  Copyright (C) 2012 Ori Livneh
-//
-//  This program is free software; you can redistribute it and/or
-//  modify it under the terms of the GNU General Public License
-//  as published by the Free Software Foundation; either version 2
-//  of the License, or (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  Licensed under the MIT and GPL licenses
+//  See https://github.com/atdt/escapes.js/blob/master/LICENSE
 
 // greetz to deniz.
 
