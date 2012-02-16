@@ -86,7 +86,7 @@
                 deferred.then(callback);
             }
             escapes(target, function (cursor) {
-                deferred.resolveWith(this, cursor);
+                deferred.resolveWith(this, [cursor]);
             });
             return deferred.promise();
         };
