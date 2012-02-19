@@ -29,9 +29,9 @@
     this.toDownloadURL()
 
         Returns a string URL containing the rendered ANSI as a base64-encoded
-        PNG file, with a MIME-type of image/octet-stream. with a MIME type of
-        "image/octet-stream". If you set this URL as the href attribute of a
-        link tag, clicking on it will open a "Save File..." dialog.
+        PNG file, with a MIME type of "image/octet-stream". If you set this URL
+        as the href attribute of a link tag, clicking on it will open a "Save
+        File..." dialog.
 
   escapes() takes a configuration object as an optional third parameter. You
   can use it to make the default background color transparent by passing in
