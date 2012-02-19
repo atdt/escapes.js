@@ -1,5 +1,5 @@
 
-                                                 _)
+                                                _)
    _ \   __|   __|   _` |  __ \    _ \   __|     |   __|
    __/ \__ \  (     (   |  |   |   __/ \__ \     | \__ \
  \___| ____/ \___| \__,_|  .__/  \___| ____/ _)  | ____/
@@ -12,7 +12,6 @@
   Demo: http://atdt.github.com/escapes.js/
 
   Example:
-
 
       escapes('path/to/file.ans', function () {
           $(this).appendTo('body');
@@ -34,7 +33,21 @@
         "image/octet-stream". If you set this URL as the href attribute of a
         link tag, clicking on it will open a "Save File..." dialog.
 
-  escapes() takes an options object as an optional third parameter. You can
-  use it to make the background transparent by passing in {transparent: true}.
+  escapes() takes a configuration object as an optional third parameter. You
+  can use it to make the default background color transparent by passing in
+  {transparent: true}.
+
+  If you're using escapes.js with jQuery, you can invoke the library as
+  $.ansiRender([url]). This returns a jQuery.Deferred object:
+
+      $.ansiRender('path/to/file.ans').done(function () {
+            // do stuff
+      });
+
+  Thie chief advantage of this approach is that it allows you to synchronize
+  ANSI rendering with other asyncronous operations (using Deferred.when, for
+  example). You can read more about jQuery.Deferred here:
+
+  http://api.jquery.com/category/deferred-object/
 
   For lots & lots of beautiful ANSI art, check out http://sixteencolors.net/
