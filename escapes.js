@@ -411,7 +411,7 @@
 
     escapes.Cursor = Cursor;
     global.escapes = escapes;
-    if (jQuery.Deferred) {
+    if (typeof jQuery !== 'undefined' && jQuery.Deferred) {
         jQueryPluginSetup();
     }
 
