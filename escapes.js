@@ -109,7 +109,7 @@
         req.overrideMimeType('text/plain; charset=x-user-defined');
         req.onreadystatechange = function () {
             if (req.readyState === req.DONE) {
-                if (req.status === 200) {
+                if (req.status === 200 || req.status === 0) {
                     success(req.responseText);
                 } else if (typeof error !== 'undefined') {
                     error(req);
