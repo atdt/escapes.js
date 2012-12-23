@@ -14,6 +14,13 @@
   Example:
 
       escapes('path/to/file.ans', function () {
+          document.body.appendChild(this);
+      });
+
+
+  Example (with jQuery):
+
+      escapes('path/to/file.ans', function () {
           $(this).appendTo('body');
       });
 
