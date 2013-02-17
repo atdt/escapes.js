@@ -149,9 +149,9 @@
 
         // Graphic mode
         this.palette = stupidCopy(COLORS);
-        this.foreground = WHITE;
-        this.background = BLACK;
-        this.flags      = 0x0;
+
+        this.clearCanvas();
+        this.resetColor();
 
         return this;
     }
@@ -173,7 +173,6 @@
             this.context.fillStyle = 'rgba(' + this.getColor(BLACK).toString() + ')';
             this.context.fillRect(0, 0, 640, this.canvas.height);
             this.flags = NONE;
-            this.resetColor();
         },
 
         trimCanvas: function () {
@@ -182,6 +181,7 @@
 
             this.canvas.height = new_height;
             this.clearCanvas();
+            this.resetColor();
             this.context.putImageData(image_data, 0, 0);
         },
 
@@ -322,8 +322,7 @@
 
             case 'J':  // Erase Display
                 if (args[0] === 2) {
-                    this.flags = NONE;
-                    this.resetColor();
+                    this.clearCanvas();
                 }
                 break;
             }
@@ -405,7 +404,6 @@
             });
         });
 
-        cursor.clearCanvas();
         return cursor;
     };
 
