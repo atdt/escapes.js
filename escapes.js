@@ -149,9 +149,8 @@
 
         // Graphic mode
         this.palette = stupidCopy(COLORS);
-        this.foreground = WHITE;
-        this.background = BLACK;
-        this.flags      = 0x0;
+
+        this.clearCanvas();
 
         return this;
     }
@@ -405,7 +404,6 @@
             });
         });
 
-        cursor.clearCanvas();
         return cursor;
     };
 
