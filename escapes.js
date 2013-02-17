@@ -414,7 +414,7 @@
     }
 
 
-// Bitmap font. Each element in the array is a glyph in the CP427 character
+// Bitmap font. Each element in the array is a glyph in the CP437 character
 // set, indexed by its character code. Each 8px x 16px character is represented
 // by a sixteen-element sub-array, with each element representing a row of
 // pixels.
