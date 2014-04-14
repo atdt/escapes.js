@@ -9,6 +9,8 @@
   escapes.js is a small JavaScript / Canvas library for rendering ANSI art. It
   has no dependencies, but it integrates nicely with jQuery.
 
+  This fork supports amiga font!
+
   Demo: http://atdt.github.com/escapes.js/
 
   Example:
@@ -24,6 +26,11 @@
           $(this).appendTo('body');
       });
 
+  Example (with jQuery and amiga font):
+
+      escapes('path/to/file.ans', function () {
+          $(this).appendTo('body');
+      }, { amiga: true; });
 
   Within the callback, the value of "this" is set to a canvas element
   containing the rendered ANSI. The element is augmented with a couple of
