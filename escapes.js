@@ -87,10 +87,6 @@
         jQuery = global.jQuery;
 
 
-    function isDeferred(obj) {
-        return (typeof obj.done === 'function');
-    }
-
     function jQueryPluginSetup() {
         jQuery.ansiRender = function (target, callback) {
             var deferred = jQuery.Deferred();
