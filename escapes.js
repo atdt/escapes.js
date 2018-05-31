@@ -201,7 +201,7 @@
         },
 
         trimCanvas: function () {
-            var new_height = (this.row + this.scrollback) * 16,
+            var new_height = (this.row + this.scrollback - 1) * 16,
                 image_data = this.context.getImageData(0, 0, 640, new_height);
 
             this.canvas.height = new_height;
