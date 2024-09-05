@@ -6,9 +6,9 @@
 //                            _|                 ___/
 //
 //  escapes.js, version 0.1
-//  http://atdt.github.com/escapes.js/
+//  https://atdt.github.io/escapes.js/
 //
-//  Copyright (C) 2012 Ori Livneh
+//  Copyright (C) 2012-2024 Ori Livneh
 //  Licensed under the MIT and GPL licenses
 //  See https://github.com/atdt/escapes.js/blob/master/LICENSE
 

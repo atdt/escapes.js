@@ -9,7 +9,7 @@
   escapes.js is a small JavaScript / Canvas library for rendering ANSI art. It
   has no dependencies, but it integrates nicely with jQuery.
 
-  Demo: http://atdt.github.com/escapes.js/
+  Demo: https://atdt.github.io/escapes.js/
 
   Example:
 
